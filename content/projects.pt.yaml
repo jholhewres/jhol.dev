@@ -10,6 +10,12 @@
   url: "https://github.com/jholhewres/agent-go"
   featured: true
 
+- name: "IntegraClaw"
+  description: "SaaS multi-tenant que conecta 40+ serviços (Google, Microsoft, Slack, Notion, Stripe e mais) a agentes de IA via OAuth e API tokens. Expõe integrações como ferramentas reutilizáveis com cobrança, rate limiting e dashboard de gerenciamento."
+  tags: [go, ai, oauth, saas, mcp, react]
+  url: "https://integraclaw.dev"
+  featured: true
+
 - name: "IntegraBot.ai"
   description: "Plataforma no-code para criacao e deploy de agentes de IA integrados a WhatsApp Business API. Sistemas multi-agentes com roteamento de intencoes, atendendo hotelaria, imobiliarias e servicos juridicos."
   tags: [ai, langchain, langgraph, whatsapp, mcp, saas]
