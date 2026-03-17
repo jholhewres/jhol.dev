@@ -113,7 +113,7 @@ export default function Home() {
             onClick={() => setLang(lang === "en" ? "pt" : "en")}
             className="text-gray-400 hover:text-[#1a1a1a] transition-colors border border-gray-200 rounded px-1.5 py-0.5 text-xs"
           >
-            {lang === "en" ? "PT" : "EN"}
+            {lang === "en" ? "br" : "en"}
           </button>
         </nav>
       </section>

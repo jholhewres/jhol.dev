@@ -16,5 +16,5 @@ RUN CGO_ENABLED=0 go build -o /bin/server ./cmd/server
 FROM alpine:3.20
 COPY --from=build /bin/server /server
 COPY content/ /content/
-EXPOSE 8080
-CMD ["/server", "-content", "/content"]
+EXPOSE 8123
+CMD ["/server", "-content", "/content", "-port", "8123"]

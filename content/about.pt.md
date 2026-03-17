@@ -1,27 +1,27 @@
-Sou **Jhol Hewres**, Engenheiro de IA construindo sistemas de IA que funcionam em producao — nao apenas em notebooks.
+Sou **Jhol Hewres**, Engenheiro de IA construindo sistemas de IA que funcionam em produção — não apenas em notebooks.
 
-Atualmente na **HostGator America Latina**, faco parte da squad de IA liderando o desenvolvimento tecnico do **SuperGator** — plataforma de agentes de IA conversacionais que atende milhares de usuarios via WhatsApp e web com suporte automatizado 24/7.
+Atualmente na **HostGator América Latina**, faço parte da squad de IA liderando o desenvolvimento técnico do **SuperGator** — plataforma de agentes de IA conversacionais que atende milhares de usuários via WhatsApp e web com suporte automatizado 24/7.
 
-Anteriormente, co-fundei a **IntegraBot.ai**, plataforma no-code para criacao e deploy de agentes de IA integrados a WhatsApp Business API, atendendo hotelaria, imobiliarias e servicos juridicos.
+Anteriormente, co-fundei a **IntegraBot.ai**, plataforma no-code para criação e deploy de agentes de IA integrados a WhatsApp Business API, atendendo hotelaria, imobiliárias e serviços jurídicos.
 
-## O que faco no dia a dia
+## O que faço no dia a dia
 
-- Sistemas multi-agentes com LangChain/LangGraph e roteamento de intencoes
+- Sistemas multi-agentes com LangChain/LangGraph e roteamento de intenções
 - Pipelines de RAG (chunking, embeddings, reranking, bancos vetoriais)
-- LLMOps: tracing, avaliacao de respostas, monitoramento de alucinacoes e custos
-- Integracao com multiplas LLMs (OpenAI, Claude, Gemini) com estrategias de fallback
+- LLMOps: tracing, avaliação de respostas, monitoramento de alucinações e custos
+- Integração com múltiplas LLMs (OpenAI, Claude, Gemini) com estratégias de fallback
 - Arquitetura serverless na AWS (Lambda, SQS, DynamoDB, Bedrock)
 
-## Trajetoria
+## Trajetória
 
-10+ anos em engenharia de software. Liderei times de ate 11 engenheiros, construi sistemas financeiros com integracoes bancarias e escalei plataformas para 100k+ usuarios.
+10+ anos em engenharia de software. Liderei times de até 11 engenheiros, construí sistemas financeiros com integrações bancárias e escalei plataformas para 100k+ usuários.
 
 **Stack:** TypeScript, Go, PHP, Python | AWS, Docker, PostgreSQL, pgvector
 
 ## Filosofia
 
-Acredito em entregar IA que funciona de forma confiavel em producao. Boa engenharia de IA nao e so sobre performance de modelo — e sobre observabilidade, controle de custos, latencia e degradacao graciosa quando as coisas dao errado.
+Acredito em entregar IA que funciona de forma confiável em produção. Boa engenharia de IA não é só sobre performance de modelo — é sobre observabilidade, controle de custos, latência e degradação graciosa quando as coisas dão errado.
 
-## Alem do codigo
+## Além do código
 
-Quando nao estou construindo sistemas de IA, voce me encontra explorando novos papers de pesquisa, contribuindo para projetos open-source ou escrevendo sobre engenharia de IA neste blog.
+Quando não estou construindo sistemas de IA, você me encontra explorando novos papers de pesquisa, contribuindo para projetos open-source ou escrevendo sobre engenharia de IA neste blog.

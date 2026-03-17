@@ -12,16 +12,16 @@ const translations: Record<string, Record<Lang, string>> = {
   "nav.about": { en: "About", pt: "Sobre" },
   "nav.blog": { en: "Blog", pt: "Blog" },
   "nav.projects": { en: "Projects", pt: "Projetos" },
-  "nav.experience": { en: "Experience", pt: "Experiencia" },
+  "nav.experience": { en: "Experience", pt: "Experiência" },
   "nav.contact": { en: "Contact", pt: "Contato" },
-  "home.greeting": { en: "Hi, I'm", pt: "Ola, eu sou" },
+  "home.greeting": { en: "Hi, I'm", pt: "Olá, eu sou" },
   "home.headline": {
     en: "AI Engineer",
     pt: "Engenheiro de IA",
   },
   "home.subtitle": {
     en: "Building production-ready AI systems. Multi-agent architecture, RAG & LLMOps.",
-    pt: "Construindo sistemas de IA para producao. Arquitetura multi-agentes, RAG & LLMOps.",
+    pt: "Construindo sistemas de IA para produção. Arquitetura multi-agentes, RAG & LLMOps.",
   },
   "home.recent_posts": { en: "Recent Posts", pt: "Posts Recentes" },
   "home.view_all": { en: "View all posts", pt: "Ver todos os posts" },
@@ -29,7 +29,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "blog.reading_time": { en: "min read", pt: "min de leitura" },
   "projects.title": { en: "Projects", pt: "Projetos" },
   "projects.featured": { en: "Featured", pt: "Destaque" },
-  "experience.title": { en: "Experience", pt: "Experiencia" },
+  "experience.title": { en: "Experience", pt: "Experiência" },
   "contact.title": { en: "Contact", pt: "Contato" },
   "contact.subtitle": {
     en: "Feel free to reach out. I'd love to hear from you.",

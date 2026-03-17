@@ -113,46 +113,27 @@ func (s *Store) loadPosts(contentDir string) error {
 		if !entry.IsDir() {
 			continue
 		}
-		slug := entry.Name()
-		// Strip date prefix (YYYY-MM-DD-) from slug for URL
-		urlSlug := slug
-		if len(slug) > 11 && slug[4] == '-' && slug[7] == '-' && slug[10] == '-' {
-			urlSlug = slug[11:]
-		}
 
-		postDir := filepath.Join(blogDir, slug)
-		files, err := os.ReadDir(postDir)
-		if err != nil {
-			return err
-		}
-
-		for _, f := range files {
-			if f.IsDir() {
-				continue
-			}
-			name := f.Name()
-			if !strings.HasPrefix(name, "index.") || !strings.HasSuffix(name, ".md") {
-				continue
-			}
-			// Extract lang from index.{lang}.md
-			lang := strings.TrimSuffix(strings.TrimPrefix(name, "index."), ".md")
-
-			data, err := os.ReadFile(filepath.Join(postDir, name))
+		// Check if this is a year directory (e.g. 2024/) or a post directory
+		name := entry.Name()
+		if isYearDir(name) {
+			yearDir := filepath.Join(blogDir, name)
+			yearEntries, err := os.ReadDir(yearDir)
 			if err != nil {
 				return err
 			}
-
-			post, err := parsePost(data, urlSlug)
-			if err != nil {
-				return fmt.Errorf("parsing %s/%s: %w", slug, name, err)
+			for _, ye := range yearEntries {
+				if !ye.IsDir() {
+					continue
+				}
+				if err := s.loadPostDir(filepath.Join(yearDir, ye.Name()), ye.Name()); err != nil {
+					return err
+				}
 			}
-
-			s.Posts[lang] = append(s.Posts[lang], post)
-
-			if s.PostMap[lang] == nil {
-				s.PostMap[lang] = make(map[string]Post)
+		} else {
+			if err := s.loadPostDir(filepath.Join(blogDir, name), name); err != nil {
+				return err
 			}
-			s.PostMap[lang][urlSlug] = post
 		}
 	}
 
@@ -161,6 +142,62 @@ func (s *Store) loadPosts(contentDir string) error {
 		sort.Slice(s.Posts[lang], func(i, j int) bool {
 			return s.Posts[lang][i].Date > s.Posts[lang][j].Date
 		})
+	}
+
+	return nil
+}
+
+func isYearDir(name string) bool {
+	if len(name) != 4 {
+		return false
+	}
+	for _, c := range name {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
+}
+
+func (s *Store) loadPostDir(postDir, dirName string) error {
+	// Strip date prefix (YYYY-MM-DD-) from slug for URL
+	urlSlug := dirName
+	if len(dirName) > 11 && dirName[4] == '-' && dirName[7] == '-' && dirName[10] == '-' {
+		urlSlug = dirName[11:]
+	}
+
+	files, err := os.ReadDir(postDir)
+	if err != nil {
+		return err
+	}
+
+	for _, f := range files {
+		if f.IsDir() {
+			continue
+		}
+		name := f.Name()
+		if !strings.HasPrefix(name, "index.") || !strings.HasSuffix(name, ".md") {
+			continue
+		}
+		// Extract lang from index.{lang}.md
+		lang := strings.TrimSuffix(strings.TrimPrefix(name, "index."), ".md")
+
+		data, err := os.ReadFile(filepath.Join(postDir, name))
+		if err != nil {
+			return err
+		}
+
+		post, err := parsePost(data, urlSlug)
+		if err != nil {
+			return fmt.Errorf("parsing %s/%s: %w", dirName, name, err)
+		}
+
+		s.Posts[lang] = append(s.Posts[lang], post)
+
+		if s.PostMap[lang] == nil {
+			s.PostMap[lang] = make(map[string]Post)
+		}
+		s.PostMap[lang][urlSlug] = post
 	}
 
 	return nil
