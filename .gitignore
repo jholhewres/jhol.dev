@@ -1,0 +1,20 @@
+# Go
+bin/
+*.exe
+
+# Frontend
+web/node_modules/
+web/dist/
+cmd/server/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local

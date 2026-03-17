@@ -1,0 +1,35 @@
+- role: "AI Engineer | Senior Software Engineer"
+  company: "HostGator America Latina"
+  period: "Ago 2025 - Presente"
+  description: "Liderando o desenvolvimento tecnico de solucoes de IA generativa em producao para milhares de usuarios. Projeto principal: SuperGator — plataforma de agentes de IA conversacionais para WhatsApp e sites com atendimento automatizado 24/7. Arquitetura multi-agentes com LangChain, pipelines de RAG, LLMOps e integracao com multiplas LLMs com fallback e load balancing."
+  tags: [ai, langchain, rag, llmops, aws, typescript, go, php, python]
+
+- role: "Co-Fundador & AI Engineer"
+  company: "IntegraBot.ai"
+  period: "Jan 2024 - Jun 2025"
+  description: "Co-fundador e lider tecnico de startup de IA conversacional. Plataforma no-code para criacao e deploy de agentes de IA integrados a WhatsApp Business API, atendendo hotelaria, imobiliarias e servicos juridicos. Sistemas multi-agentes com LangChain/LangGraph, pipelines de RAG e LLMOps. Infraestrutura serverless na AWS."
+  tags: [ai, langchain, langgraph, rag, whatsapp, aws, startup]
+
+- role: "Engineering Technical Lead"
+  company: "AcesseSeuCondominio"
+  period: "Out 2021 - Mai 2025"
+  description: "Liderei desenvolvimento de sistema de gestao condominial com 100k+ usuarios ativos. Gerenciei time de 11 pessoas com processos de revisao, rituais Scrum. Mentoria tecnica de 6 desenvolvedores junior/pleno. Arquitetei e desenvolvi novos produtos dentro do sistema."
+  tags: [lideranca, php, laravel, vue.js, docker, postgres, microsservicos]
+
+- role: "Full-Stack Engineer | Co-Fundador"
+  company: "Alta Forja Tecnologia"
+  period: "Jan 2022 - Dez 2024"
+  description: "Desenvolvi solucoes customizadas em PHP/Laravel para clientes B2B. Implementei arquitetura de microsservicos com Docker e PostgreSQL. Criei APIs REST para integracao com sistemas ERP e CRM. Liderei desenvolvimento de plataforma de IA para analise de dados empresariais."
+  tags: [php, laravel, vue.js, postgresql, docker, apis]
+
+- role: "Senior Back-end Engineer"
+  company: "Atlas Technologies"
+  period: "Jan 2023 - Dez 2023"
+  description: "Desenvolvi e mantive microsservicos criticos da plataforma FatalModel usando Laravel. Implementei multiplas assinaturas simultaneas no mesmo checkout. Otimizei performance de APIs. Equipe internacional com metodologia Agile/Scrum."
+  tags: [php, laravel, elasticsearch, docker, redis, mysql]
+
+- role: "Senior Full Stack Software Engineer"
+  company: "AcesseSeuCondominio"
+  period: "Jun 2020 - Fev 2022"
+  description: "Desenvolvimento de solucoes avancadas e escalonaveis com multiplas tecnologias para a plataforma de gestao condominial."
+  tags: [php, laravel, oracle, rabbitmq, vue.js]

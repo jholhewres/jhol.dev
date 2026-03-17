@@ -1,0 +1,35 @@
+- role: "AI Engineer | Senior Software Engineer"
+  company: "HostGator Latin America"
+  period: "Aug 2025 - Present"
+  description: "Leading technical development of generative AI solutions for thousands of users. Main project: SuperGator — conversational AI agent platform for WhatsApp and web with 24/7 automated support. Multi-agent architecture with LangChain, RAG pipelines, LLMOps, and integration with multiple LLMs with fallback and load balancing."
+  tags: [ai, langchain, rag, llmops, aws, typescript, go, php, python]
+
+- role: "Co-Founder & AI Engineer"
+  company: "IntegraBot.ai"
+  period: "Jan 2024 - Jun 2025"
+  description: "Co-founded and led technical development of a no-code platform for creating and deploying AI agents integrated with WhatsApp Business API, serving hospitality, real estate, and legal services. Built multi-agent systems with LangChain/LangGraph, RAG pipelines, and LLMOps tracing. Managed serverless infrastructure on AWS."
+  tags: [ai, langchain, langgraph, rag, whatsapp, aws, startup]
+
+- role: "Engineering Technical Lead"
+  company: "AcesseSeuCondominio"
+  period: "Oct 2021 - May 2025"
+  description: "Led development of a condominium management system with 100k+ active users. Managed a team of 11 engineers with code reviews, Scrum rituals, and mentored 6 junior/mid developers. Architected and developed new products within the system."
+  tags: [leadership, php, laravel, vue.js, docker, postgres, microservices]
+
+- role: "Full-Stack Engineer | Co-Founder"
+  company: "Alta Forja Tecnologia"
+  period: "Jan 2022 - Dec 2024"
+  description: "Developed custom B2B solutions in PHP/Laravel. Implemented microservices architecture with Docker and PostgreSQL. Built REST APIs for ERP/CRM integrations. Led development of an AI platform for business data analysis."
+  tags: [php, laravel, vue.js, postgresql, docker, apis]
+
+- role: "Senior Back-end Engineer"
+  company: "Atlas Technologies"
+  period: "Jan 2023 - Dec 2023"
+  description: "Developed and maintained critical microservices for the FatalModel platform using Laravel. Implemented multiple simultaneous subscriptions in the same checkout. Optimized API performance and response times. International team with Agile/Scrum methodology."
+  tags: [php, laravel, elasticsearch, docker, redis, mysql]
+
+- role: "Senior Full Stack Software Engineer"
+  company: "AcesseSeuCondominio"
+  period: "Jun 2020 - Feb 2022"
+  description: "Development of advanced and scalable solutions with multiple technologies. Built core features for the condominium management platform."
+  tags: [php, laravel, oracle, rabbitmq, vue.js]

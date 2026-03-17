@@ -1,0 +1,23 @@
+- name: "DevClaw"
+  description: "Agente de IA para times de dev. Binario unico, roda em qualquer lugar. Automatiza code review, testes e workflows de deploy."
+  tags: [go, ai, cli, devtools]
+  url: "https://github.com/jholhewres/devclaw"
+  featured: true
+
+- name: "AgentGo"
+  description: "Framework multi-agente de IA de alto desempenho em Go. Construa, orquestre e implante agentes de IA com overhead minimo."
+  tags: [go, ai, agents, llm]
+  url: "https://github.com/jholhewres/agent-go"
+  featured: true
+
+- name: "IntegraBot.ai"
+  description: "Plataforma no-code para criacao e deploy de agentes de IA integrados a WhatsApp Business API. Sistemas multi-agentes com roteamento de intencoes, atendendo hotelaria, imobiliarias e servicos juridicos."
+  tags: [ai, langchain, langgraph, whatsapp, mcp, saas]
+  url: "https://integrabot.ai"
+  featured: true
+
+- name: "WhatsGo API"
+  description: "Biblioteca de integracao com WhatsApp Business API para Go. Type-safe, bem documentada, pronta para producao."
+  tags: [go, whatsapp, api, messaging]
+  url: "https://github.com/jholhewres/whatsgo"
+  featured: false
