@@ -12,6 +12,8 @@ const SITE_NAME = "Jhol Hewres";
 const DEFAULT_DESC =
   "AI Engineer building production-ready AI systems. Multi-agent architecture, RAG & LLMOps.";
 const BASE_URL = "https://jhol.dev";
+const DEFAULT_IMAGE = `${BASE_URL}/avatar.jpg`;
+const BLOG_IMAGE = `${BASE_URL}/og-blog.png`;
 
 function setMeta(property: string, content: string, isOG = false) {
   const attr = isOG ? "property" : "name";
@@ -30,7 +32,7 @@ export function useSEO({ title, description, url, type, image }: SEOProps) {
     const desc = description || DEFAULT_DESC;
     const pageUrl = url ? `${BASE_URL}${url}` : BASE_URL;
     const ogType = type || "website";
-    const ogImage = image || `${BASE_URL}/avatar.jpg`;
+    const ogImage = image || (type === "article" ? BLOG_IMAGE : DEFAULT_IMAGE);
 
     document.title = fullTitle;
 

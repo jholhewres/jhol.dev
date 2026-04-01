@@ -96,6 +96,7 @@ func (s *SPA) injectSEO(html, urlPath string) string {
 							post.Summary,
 							baseURL+"/blog/"+slug,
 							"article",
+							baseURL+"/og-blog.png",
 						)
 					}
 				}
@@ -120,7 +121,11 @@ func (s *SPA) injectSEO(html, urlPath string) string {
 	return html
 }
 
-func replaceMeta(html, title, description, url, ogType string) string {
+func replaceMeta(html, title, description, url, ogType string, image ...string) string {
+	if len(image) > 0 && image[0] != "" {
+		html = replaceMetaContent(html, `property="og:image"`, image[0])
+		html = replaceMetaContent(html, `name="twitter:image"`, image[0])
+	}
 	if title != "" {
 		html = replaceTag(html, "<title>", "</title>", fmt.Sprintf("<title>%s</title>", escapeHTML(title)))
 		html = replaceMetaContent(html, `property="og:title"`, escapeHTML(title))
