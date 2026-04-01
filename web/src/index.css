@@ -82,23 +82,29 @@ body {
 }
 
 .prose pre {
-  background-color: #f3f4f6;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: 0.625rem;
+  padding: 1.25rem;
   overflow-x: auto;
   margin-bottom: 1.25em;
-  font-size: 0.875rem;
-  line-height: 1.6;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  border: 1px solid #313244;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .prose code {
   font-size: 0.875em;
+  font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 }
 
 .prose :not(pre) > code {
-  background-color: #f3f4f6;
-  padding: 0.125em 0.375em;
+  background-color: #e8eaf0;
+  color: #383a42;
+  padding: 0.15em 0.4em;
   border-radius: 0.25rem;
+  font-size: 0.85em;
 }
 
 .prose img {
@@ -206,12 +212,13 @@ body {
 
 .reading-mode-prose pre {
   font-size: 0.8125rem;
-  background-color: #2a2517;
-  color: #e8e0d0;
-  border: 1px solid #3d3929;
-  border-radius: 0.5rem;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  border: 1px solid #313244;
+  border-radius: 0.625rem;
   padding: 1.25rem;
   overflow-x: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .reading-mode-prose :not(pre) > code {

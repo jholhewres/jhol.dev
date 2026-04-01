@@ -62,7 +62,7 @@ func init() {
 		goldmark.WithExtensions(
 			extension.GFM,
 			highlighting.NewHighlighting(
-				highlighting.WithStyle("github"),
+				highlighting.WithStyle("monokai"),
 			),
 		),
 		goldmark.WithParserOptions(
