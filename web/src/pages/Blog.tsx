@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 import PostCard from "../components/PostCard";
 import BackNav from "../components/BackNav";
+import { PostListSkeleton } from "../components/Skeleton";
 
 interface PostSummary {
   slug: string;
@@ -15,13 +17,17 @@ interface PostSummary {
 export default function Blog() {
   const { lang, t } = useLanguage();
   const [posts, setPosts] = useState<PostSummary[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filterTag, setFilterTag] = useState<string | null>(null);
+  useSEO({ title: "Blog", description: "Articles about AI engineering, Go, React, and software architecture.", url: "/blog" });
 
   useEffect(() => {
+    setLoading(true);
     fetch(`/api/posts?lang=${lang}`)
       .then((r) => r.json())
       .then((data) => setPosts(data ?? []))
-      .catch(() => setPosts([]));
+      .catch(() => setPosts([]))
+      .finally(() => setLoading(false));
   }, [lang]);
 
   const allTags = [...new Set(posts.flatMap((p) => p.tags ?? []))].sort();
@@ -62,22 +68,27 @@ export default function Blog() {
         </div>
       )}
 
-      <div className="space-y-8">
-        {filtered.map((post) => (
-          <PostCard
-            key={post.slug}
-            slug={post.slug}
-            title={post.title}
-            date={post.date}
-            summary={post.summary}
-            tags={post.tags}
-            readingTime={post.reading_time}
-          />
-        ))}
-      </div>
-
-      {filtered.length === 0 && (
-        <p className="text-gray-500 text-center py-12">No posts yet.</p>
+      {loading ? (
+        <PostListSkeleton count={5} />
+      ) : (
+        <>
+          <div className="space-y-8 animate-fade-in">
+            {filtered.map((post) => (
+              <PostCard
+                key={post.slug}
+                slug={post.slug}
+                title={post.title}
+                date={post.date}
+                summary={post.summary}
+                tags={post.tags}
+                readingTime={post.reading_time}
+              />
+            ))}
+          </div>
+          {filtered.length === 0 && (
+            <p className="text-gray-500 text-center py-12">No posts yet.</p>
+          )}
+        </>
       )}
     </div>
   );

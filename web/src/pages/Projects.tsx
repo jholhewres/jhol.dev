@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 import BackNav from "../components/BackNav";
+import { ProjectListSkeleton } from "../components/Skeleton";
 
 interface Project {
   name: string;
@@ -13,12 +15,16 @@ interface Project {
 export default function Projects() {
   const { lang, t } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  useSEO({ title: "Projects", description: "Open source projects and tools built by Jhol Hewres.", url: "/projects" });
 
   useEffect(() => {
+    setLoading(true);
     fetch(`/api/projects?lang=${lang}`)
       .then((r) => r.json())
       .then((data) => setProjects(data ?? []))
-      .catch(() => setProjects([]));
+      .catch(() => setProjects([]))
+      .finally(() => setLoading(false));
   }, [lang]);
 
   const featured = projects.filter((p) => p.featured);
@@ -29,29 +35,35 @@ export default function Projects() {
       <BackNav />
       <h1 className="text-2xl font-bold mb-6">{t("projects.title")}</h1>
 
-      {featured.length > 0 && (
-        <div className="mb-10">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
-            {t("projects.featured")}
-          </h2>
-          <div className="grid gap-4">
-            {featured.map((p) => (
-              <ProjectCard key={p.name} project={p} />
-            ))}
-          </div>
-        </div>
-      )}
+      {loading ? (
+        <ProjectListSkeleton count={4} />
+      ) : (
+        <div className="animate-fade-in">
+          {featured.length > 0 && (
+            <div className="mb-10">
+              <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
+                {t("projects.featured")}
+              </h2>
+              <div className="grid gap-4">
+                {featured.map((p) => (
+                  <ProjectCard key={p.name} project={p} />
+                ))}
+              </div>
+            </div>
+          )}
 
-      {others.length > 0 && (
-        <div className="grid gap-4">
-          {others.map((p) => (
-            <ProjectCard key={p.name} project={p} />
-          ))}
-        </div>
-      )}
+          {others.length > 0 && (
+            <div className="grid gap-4">
+              {others.map((p) => (
+                <ProjectCard key={p.name} project={p} />
+              ))}
+            </div>
+          )}
 
-      {projects.length === 0 && (
-        <p className="text-gray-500 text-center py-12">No projects yet.</p>
+          {projects.length === 0 && (
+            <p className="text-gray-500 text-center py-12">No projects yet.</p>
+          )}
+        </div>
       )}
     </div>
   );

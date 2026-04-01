@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 import PostCard from "../components/PostCard";
+import { PostListSkeleton } from "../components/Skeleton";
 
 interface PostSummary {
   slug: string;
@@ -15,12 +17,16 @@ interface PostSummary {
 export default function Home() {
   const { lang, setLang, t } = useLanguage();
   const [posts, setPosts] = useState<PostSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  useSEO({ url: "/" });
 
   useEffect(() => {
+    setLoading(true);
     fetch(`/api/posts?lang=${lang}`)
       .then((r) => r.json())
       .then((data) => setPosts(data?.slice(0, 5) ?? []))
-      .catch(() => setPosts([]));
+      .catch(() => setPosts([]))
+      .finally(() => setLoading(false));
   }, [lang]);
 
   return (
@@ -119,18 +125,20 @@ export default function Home() {
       </section>
 
       {/* Recent posts */}
-      {posts.length > 0 && (
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold">{t("home.recent_posts")}</h2>
-            <Link
-              to="/blog"
-              className="text-sm text-accent hover:text-accent-hover transition-colors"
-            >
-              {t("home.view_all")} &rarr;
-            </Link>
-          </div>
-          <div className="space-y-6">
+      <section>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold">{t("home.recent_posts")}</h2>
+          <Link
+            to="/blog"
+            className="text-sm text-accent hover:text-accent-hover transition-colors"
+          >
+            {t("home.view_all")} &rarr;
+          </Link>
+        </div>
+        {loading ? (
+          <PostListSkeleton count={3} />
+        ) : (
+          <div className="space-y-6 animate-fade-in">
             {posts.map((post) => (
               <PostCard
                 key={post.slug}
@@ -143,8 +151,8 @@ export default function Home() {
               />
             ))}
           </div>
-        </section>
-      )}
+        )}
+      </section>
     </div>
   );
 }

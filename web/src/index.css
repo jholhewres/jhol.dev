@@ -129,3 +129,30 @@ body {
   background-color: #f9fafb;
   font-weight: 600;
 }
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Like button */
+@keyframes like-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.animate-like-pop {
+  animation: like-pop 0.3s ease-out;
+}

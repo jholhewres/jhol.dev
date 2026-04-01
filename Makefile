@@ -6,7 +6,7 @@ dev:
 	@echo "Frontend: http://localhost:5173"
 	@echo "Backend:  http://localhost:8123"
 	@cd web && npm run dev &
-	@go run ./cmd/server -dev
+	@go run ./cmd/server -dev -data ./data
 
 # Production build
 build: build-web build-go
@@ -21,7 +21,7 @@ build-go:
 
 # Build and run production server
 serve: build
-	./bin/jhol-dev -content ./content
+	./bin/jhol-dev -content ./content -data ./data
 
 clean:
 	rm -rf bin/ cmd/server/dist/ web/dist/ web/node_modules/

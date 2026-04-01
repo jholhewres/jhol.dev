@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
+import LikeButton from "../components/LikeButton";
 
 interface Post {
   slug: string;
@@ -17,6 +19,12 @@ export default function BlogPost() {
   const { lang, t } = useLanguage();
   const [post, setPost] = useState<Post | null>(null);
   const [notFound, setNotFound] = useState(false);
+  useSEO(post ? {
+    title: post.title,
+    description: post.summary,
+    url: `/blog/${post.slug}`,
+    type: "article",
+  } : {});
 
   useEffect(() => {
     fetch(`/api/posts/${slug}?lang=${lang}`)
@@ -43,11 +51,39 @@ export default function BlogPost() {
   }
 
   if (!post) {
-    return <div className="py-16 text-center text-gray-400">Loading...</div>;
+    return (
+      <div className="py-8 animate-pulse space-y-4">
+        <div className="h-4 bg-gray-200 rounded w-16" />
+        <div className="h-8 bg-gray-200 rounded w-3/4 mt-4" />
+        <div className="h-3 bg-gray-100 rounded w-1/3" />
+        <div className="space-y-3 mt-8">
+          <div className="h-4 bg-gray-100 rounded w-full" />
+          <div className="h-4 bg-gray-100 rounded w-5/6" />
+          <div className="h-4 bg-gray-100 rounded w-4/6" />
+          <div className="h-4 bg-gray-100 rounded w-full" />
+          <div className="h-4 bg-gray-100 rounded w-3/4" />
+        </div>
+      </div>
+    );
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.summary,
+    datePublished: post.date,
+    author: { "@type": "Person", name: "Jhol Hewres" },
+    url: `https://jhol.dev/blog/${post.slug}`,
+    keywords: post.tags?.join(", "),
+  };
+
   return (
-    <article className="py-8">
+    <article className="py-8 animate-fade-in">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Link
         to="/blog"
         className="text-sm text-accent hover:text-accent-hover transition-colors"
@@ -88,6 +124,10 @@ export default function BlogPost() {
         className="prose"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
+
+      <div className="mt-10 pt-6 border-t border-gray-100">
+        <LikeButton slug={post.slug} />
+      </div>
     </article>
   );
 }

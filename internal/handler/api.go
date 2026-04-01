@@ -2,22 +2,36 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"strings"
 
 	"jhol.dev/internal/content"
+	"jhol.dev/internal/likes"
 )
 
 type API struct {
-	store *content.Store
+	store      *content.Store
+	likesStore *likes.Store
 }
 
-func NewAPI(store *content.Store) *API {
-	return &API{store: store}
+func NewAPI(store *content.Store, dataDir string) *API {
+	ls, err := likes.New(dataDir)
+	if err != nil {
+		log.Printf("warning: likes store at %s failed: %v, falling back to /tmp", dataDir, err)
+		ls, err = likes.New("/tmp/jhol-dev-likes")
+		if err != nil {
+			log.Printf("warning: likes store fallback also failed: %v, likes disabled", err)
+		}
+	}
+	return &API{store: store, likesStore: ls}
 }
 
 func (a *API) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/posts", a.listPosts)
 	mux.HandleFunc("GET /api/posts/{slug}", a.getPost)
+	mux.HandleFunc("GET /api/posts/{slug}/likes", a.getLikes)
+	mux.HandleFunc("POST /api/posts/{slug}/like", a.addLike)
 	mux.HandleFunc("GET /api/projects", a.listProjects)
 	mux.HandleFunc("GET /api/experience", a.listExperience)
 	mux.HandleFunc("GET /api/about", a.getAbout)
@@ -44,7 +58,6 @@ func (a *API) listPosts(w http.ResponseWriter, r *http.Request) {
 		posts = a.store.Posts["en"]
 	}
 
-	// Return posts without full content
 	type postSummary struct {
 		Slug        string   `json:"slug"`
 		Title       string   `json:"title"`
@@ -73,6 +86,12 @@ func (a *API) getPost(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug")
 	l := lang(r)
 
+	// Avoid matching /likes and /like sub-routes
+	if slug == "" || strings.Contains(slug, "/") {
+		http.NotFound(w, r)
+		return
+	}
+
 	postMap := a.store.PostMap[l]
 	if postMap == nil {
 		postMap = a.store.PostMap["en"]
@@ -85,6 +104,46 @@ func (a *API) getPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, post)
+}
+
+func (a *API) getLikes(w http.ResponseWriter, r *http.Request) {
+	if a.likesStore == nil {
+		writeJSON(w, map[string]int{"likes": 0})
+		return
+	}
+	slug := r.PathValue("slug")
+	count := a.likesStore.Get(slug)
+	writeJSON(w, map[string]int{"likes": count})
+}
+
+func (a *API) addLike(w http.ResponseWriter, r *http.Request) {
+	if a.likesStore == nil {
+		http.Error(w, "Likes not available", http.StatusServiceUnavailable)
+		return
+	}
+	slug := r.PathValue("slug")
+
+	// Verify post exists
+	found := false
+	for _, lang := range []string{"en", "pt"} {
+		if pm, ok := a.store.PostMap[lang]; ok {
+			if _, ok := pm[slug]; ok {
+				found = true
+				break
+			}
+		}
+	}
+	if !found {
+		http.NotFound(w, r)
+		return
+	}
+
+	count, err := a.likesStore.Increment(slug)
+	if err != nil {
+		http.Error(w, "Failed to save like", http.StatusInternalServerError)
+		return
+	}
+	writeJSON(w, map[string]int{"likes": count})
 }
 
 func (a *API) listProjects(w http.ResponseWriter, r *http.Request) {
@@ -131,7 +190,5 @@ func (a *API) submitContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// For now, just log and return success
-	// In production, this would send an email or store to a file
 	writeJSON(w, map[string]string{"status": "ok"})
 }

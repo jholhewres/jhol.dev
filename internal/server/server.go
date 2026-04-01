@@ -7,9 +7,11 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"time"
 
 	"jhol.dev/internal/content"
 	"jhol.dev/internal/handler"
+	"jhol.dev/internal/middleware"
 )
 
 type Config struct {
@@ -17,6 +19,7 @@ type Config struct {
 	ContentDir string
 	DevMode    bool
 	FrontendFS fs.FS
+	DataDir    string
 }
 
 func Run(cfg Config) error {
@@ -28,8 +31,12 @@ func Run(cfg Config) error {
 	mux := http.NewServeMux()
 
 	// Register API routes
-	api := handler.NewAPI(store)
+	api := handler.NewAPI(store, cfg.DataDir)
 	api.RegisterRoutes(mux)
+
+	// SEO routes (sitemap, RSS, robots.txt)
+	seo := handler.NewSEO(store)
+	seo.RegisterRoutes(mux)
 
 	// Frontend serving
 	if cfg.DevMode {
@@ -40,11 +47,22 @@ func Run(cfg Config) error {
 		log.Println("Dev mode: proxying frontend to Vite at localhost:5173")
 	} else {
 		// In production, serve embedded frontend
-		spa := handler.NewSPA(cfg.FrontendFS)
+		spa := handler.NewSPA(cfg.FrontendFS, store)
 		mux.Handle("/", spa)
 	}
 
+	// Rate limiter: 10 POST requests per minute per IP
+	rateLimiter := middleware.NewRateLimiter(10, time.Minute)
+
+	// Apply middleware chain
+	handler := middleware.Chain(mux,
+		middleware.SecurityHeaders,
+		middleware.Gzip,
+		middleware.CacheAPI,
+		rateLimiter.Middleware,
+	)
+
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	log.Printf("Server starting on %s (content: %s)", addr, cfg.ContentDir)
-	return http.ListenAndServe(addr, mux)
+	return http.ListenAndServe(addr, handler)
 }

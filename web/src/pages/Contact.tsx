@@ -1,8 +1,10 @@
 import { useLanguage } from "../context/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 import BackNav from "../components/BackNav";
 
 export default function Contact() {
   const { t } = useLanguage();
+  useSEO({ title: "Contact", description: "Get in touch with Jhol Hewres.", url: "/contact" });
 
   return (
     <div className="py-8">

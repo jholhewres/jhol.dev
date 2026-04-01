@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { useSEO } from "../hooks/useSEO";
 import BackNav from "../components/BackNav";
+import { ExperienceListSkeleton } from "../components/Skeleton";
 
 interface ExperienceItem {
   role: string;
@@ -13,12 +15,16 @@ interface ExperienceItem {
 export default function Experience() {
   const { lang, t } = useLanguage();
   const [items, setItems] = useState<ExperienceItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  useSEO({ title: "Experience", description: "Professional experience and career history of Jhol Hewres.", url: "/experience" });
 
   useEffect(() => {
+    setLoading(true);
     fetch(`/api/experience?lang=${lang}`)
       .then((r) => r.json())
       .then((data) => setItems(data ?? []))
-      .catch(() => setItems([]));
+      .catch(() => setItems([]))
+      .finally(() => setLoading(false));
   }, [lang]);
 
   return (
@@ -26,8 +32,10 @@ export default function Experience() {
       <BackNav />
       <h1 className="text-2xl font-bold mb-8">{t("experience.title")}</h1>
 
-      {items.length > 0 ? (
-        <div className="relative">
+      {loading ? (
+        <ExperienceListSkeleton count={3} />
+      ) : items.length > 0 ? (
+        <div className="relative animate-fade-in">
           {/* Timeline line */}
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gray-200" />
 
