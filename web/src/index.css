@@ -156,3 +156,34 @@ body {
 .animate-like-pop {
   animation: like-pop 0.3s ease-out;
 }
+
+/* Reading mode */
+.reading-mode {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.reading-mode-prose {
+  font-size: 1.125rem;
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+}
+
+.reading-mode-prose p {
+  margin-bottom: 1.5em;
+}
+
+.reading-mode-prose h2 {
+  margin-top: 2.5em;
+}
+
+.reading-mode-prose pre {
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 640px) {
+  .reading-mode-prose {
+    font-size: 1.0625rem;
+    line-height: 1.85;
+  }
+}
