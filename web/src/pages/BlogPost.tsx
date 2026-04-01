@@ -16,7 +16,7 @@ interface Post {
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
-  const { lang, t } = useLanguage();
+  const { lang, setLang, t } = useLanguage();
   const [post, setPost] = useState<Post | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [readingMode, setReadingMode] = useState(false);
@@ -39,6 +39,15 @@ export default function BlogPost() {
       })
       .catch(() => setNotFound(true));
   }, [slug, lang]);
+
+  // ESC exits reading mode
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && readingMode) setReadingMode(false);
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [readingMode]);
 
   if (notFound) {
     return (
@@ -94,6 +103,13 @@ export default function BlogPost() {
           &larr; {t("nav.blog")}
         </Link>
 
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setLang(lang === "en" ? "pt" : "en")}
+            className="text-xs text-gray-400 hover:text-gray-600 transition-colors border border-gray-200 rounded px-1.5 py-0.5"
+          >
+            {lang === "en" ? "br" : "en"}
+          </button>
         <button
           onClick={() => setReadingMode(!readingMode)}
           className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1 rounded border border-transparent hover:border-gray-200"
@@ -109,6 +125,7 @@ export default function BlogPost() {
           </svg>
           {readingMode ? "Exit" : "Read"}
         </button>
+        </div>
       </div>
 
       <header className={`mt-4 mb-8 transition-all duration-300 ${readingMode ? "text-center mb-12" : ""}`}>
