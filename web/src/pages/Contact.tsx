@@ -10,7 +10,7 @@ export default function Contact() {
     <div className="py-8">
       <BackNav />
       <h1 className="text-2xl font-bold mb-2">{t("contact.title")}</h1>
-      <p className="text-gray-600 mb-8">{t("contact.subtitle")}</p>
+      <p className="text-[var(--color-fg-muted)] mb-8">{t("contact.subtitle")}</p>
 
       <a
         href="mailto:jhol.code@gmail.com"
@@ -37,7 +37,7 @@ export default function Contact() {
           href="https://github.com/jholhewres"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-400 hover:text-[#1a1a1a] transition-colors"
+          className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors"
           aria-label="GitHub"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@ export default function Contact() {
           href="https://www.linkedin.com/in/jholh/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-400 hover:text-[#1a1a1a] transition-colors"
+          className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors"
           aria-label="LinkedIn"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,7 @@ export default function Contact() {
           href="https://www.instagram.com/jhol.dev/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-400 hover:text-[#1a1a1a] transition-colors"
+          className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors"
           aria-label="Instagram"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

@@ -23,7 +23,7 @@ export default function PostCard({
   return (
     <article className="group">
       <Link to={`/blog/${slug}`} className="block">
-        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+        <div className="flex items-center gap-2 text-sm text-[var(--color-fg-subtle)] mb-1">
           <time dateTime={date}>
             {new Date(date + "T00:00:00").toLocaleDateString("en-US", {
               year: "numeric",
@@ -36,16 +36,16 @@ export default function PostCard({
             {readingTime} {t("blog.reading_time")}
           </span>
         </div>
-        <h3 className="text-lg font-semibold text-[#1a1a1a] group-hover:text-accent transition-colors mb-1">
+        <h3 className="text-lg font-semibold text-[var(--color-fg)] group-hover:text-accent transition-colors mb-1">
           {title}
         </h3>
-        <p className="text-gray-600 text-sm mb-2">{summary}</p>
+        <p className="text-[var(--color-fg-muted)] text-sm mb-2">{summary}</p>
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
+                className="text-xs bg-[var(--color-border-subtle)] text-[var(--color-fg-muted)] px-2 py-0.5 rounded"
               >
                 {tag}
               </span>

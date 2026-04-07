@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io/fs"
 	"log"
+	"os"
 
 	"jhol.dev/internal/server"
 )
@@ -17,6 +18,7 @@ func main() {
 	contentDir := flag.String("content", "content", "content directory path")
 	dataDir := flag.String("data", "data", "data directory for likes, etc.")
 	dev := flag.Bool("dev", false, "enable dev mode (proxy to Vite)")
+	adminToken := flag.String("admin-token", os.Getenv("ADMIN_TOKEN"), "admin token for /api/admin/stats")
 	flag.Parse()
 
 	var frontendFS fs.FS
@@ -34,6 +36,7 @@ func main() {
 		DataDir:    *dataDir,
 		DevMode:    *dev,
 		FrontendFS: frontendFS,
+		AdminToken: *adminToken,
 	}); err != nil {
 		log.Fatal(err)
 	}

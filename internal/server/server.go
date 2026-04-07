@@ -9,17 +9,20 @@ import (
 	"net/url"
 	"time"
 
+	"jhol.dev/internal/analytics"
 	"jhol.dev/internal/content"
 	"jhol.dev/internal/handler"
 	"jhol.dev/internal/middleware"
+	"jhol.dev/internal/views"
 )
 
 type Config struct {
-	Port       int
-	ContentDir string
-	DevMode    bool
-	FrontendFS fs.FS
-	DataDir    string
+	Port        int
+	ContentDir  string
+	DevMode     bool
+	FrontendFS  fs.FS
+	DataDir     string
+	AdminToken  string
 }
 
 func Run(cfg Config) error {
@@ -30,13 +33,27 @@ func Run(cfg Config) error {
 
 	mux := http.NewServeMux()
 
+	// Views store
+	viewsStore, err := views.New(cfg.DataDir)
+	if err != nil {
+		return fmt.Errorf("views store: %w", err)
+	}
+
 	// Register API routes
-	api := handler.NewAPI(store, cfg.DataDir)
+	api := handler.NewAPI(store, cfg.DataDir, viewsStore)
 	api.RegisterRoutes(mux)
 
 	// SEO routes (sitemap, RSS, robots.txt)
 	seo := handler.NewSEO(store)
 	seo.RegisterRoutes(mux)
+
+	// Analytics store + admin endpoint
+	analyticsStore, err := analytics.New(cfg.DataDir)
+	if err != nil {
+		return fmt.Errorf("analytics store: %w", err)
+	}
+	admin := handler.NewAdmin(analyticsStore, cfg.AdminToken)
+	admin.RegisterRoutes(mux)
 
 	// Frontend serving
 	if cfg.DevMode {
@@ -56,7 +73,9 @@ func Run(cfg Config) error {
 
 	// Apply middleware chain
 	handler := middleware.Chain(mux,
+		middleware.Logger,
 		middleware.SecurityHeaders,
+		middleware.PageView(analyticsStore),
 		middleware.Gzip,
 		middleware.CacheAPI,
 		rateLimiter.Middleware,

@@ -5,11 +5,60 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
 )
+
+// statusRecorder wraps ResponseWriter to capture status code and bytes written.
+type statusRecorder struct {
+	http.ResponseWriter
+	status int
+	bytes  int
+}
+
+func (r *statusRecorder) WriteHeader(code int) {
+	r.status = code
+	r.ResponseWriter.WriteHeader(code)
+}
+
+func (r *statusRecorder) Write(b []byte) (int, error) {
+	if r.status == 0 {
+		r.status = http.StatusOK
+	}
+	n, err := r.ResponseWriter.Write(b)
+	r.bytes += n
+	return n, err
+}
+
+// Logger writes a structured access log line per request.
+// Format: "METHOD PATH STATUS DURATION COUNTRY UA"
+// Uses CF-IPCountry when present (no IP is logged).
+func Logger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		rec := &statusRecorder{ResponseWriter: w, status: 0}
+		next.ServeHTTP(rec, r)
+		country := r.Header.Get("CF-IPCountry")
+		if country == "" {
+			country = "-"
+		}
+		ua := r.UserAgent()
+		if len(ua) > 60 {
+			ua = ua[:60]
+		}
+		log.Printf("%s %s %d %s %s %q",
+			r.Method,
+			r.URL.Path,
+			rec.status,
+			time.Since(start).Round(time.Millisecond),
+			country,
+			ua,
+		)
+	})
+}
 
 // Chain applies middleware in order (outermost first).
 func Chain(h http.Handler, mws ...func(http.Handler) http.Handler) http.Handler {

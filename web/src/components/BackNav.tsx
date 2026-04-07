@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 export default function BackNav() {
   return (
-    <Link
-      to="/"
-      className="inline-block text-sm text-gray-400 hover:text-accent transition-colors mb-6"
-    >
-      &larr; jhol.dev
-    </Link>
+    <div className="flex items-center justify-between mb-6">
+      <Link
+        to="/"
+        className="inline-block text-sm text-[var(--color-fg-subtle)] hover:text-accent transition-colors"
+      >
+        &larr; jhol.dev
+      </Link>
+      <ThemeToggle />
+    </div>
   );
 }

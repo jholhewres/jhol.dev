@@ -4,14 +4,14 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="border-t border-gray-100 mt-16">
-      <div className="mx-auto max-w-[680px] px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+    <footer className="border-t border-[var(--color-border-subtle)] mt-16">
+      <div className="mx-auto max-w-[680px] px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--color-fg-subtle)]">
         <div className="flex items-center gap-4">
           <a
             href="https://github.com/jholhewres"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#1a1a1a] transition-colors"
+            className="hover:text-[var(--color-fg)] transition-colors"
             aria-label="GitHub"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -22,7 +22,7 @@ export default function Footer() {
             href="https://www.linkedin.com/in/jholh/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#1a1a1a] transition-colors"
+            className="hover:text-[var(--color-fg)] transition-colors"
             aria-label="LinkedIn"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@ export default function Footer() {
             href="https://www.instagram.com/jhol.dev/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#1a1a1a] transition-colors"
+            className="hover:text-[var(--color-fg)] transition-colors"
             aria-label="Instagram"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -42,7 +42,7 @@ export default function Footer() {
           </a>
           <a
             href="mailto:jhol.code@gmail.com"
-            className="hover:text-[#1a1a1a] transition-colors"
+            className="hover:text-[var(--color-fg)] transition-colors"
             aria-label="Email"
           >
             <svg

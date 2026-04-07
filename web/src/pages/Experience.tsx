@@ -37,23 +37,23 @@ export default function Experience() {
       ) : items.length > 0 ? (
         <div className="relative animate-fade-in">
           {/* Timeline line */}
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gray-200" />
+          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[var(--color-border)]" />
 
           <div className="space-y-8">
             {items.map((item, i) => (
               <div key={i} className="relative pl-8">
                 {/* Timeline dot */}
-                <div className="absolute left-0 top-2 w-[15px] h-[15px] rounded-full border-2 border-accent bg-white" />
+                <div className="absolute left-0 top-2 w-[15px] h-[15px] rounded-full border-2 border-accent bg-[var(--color-bg)]" />
 
                 <div>
-                  <h3 className="font-semibold text-[#1a1a1a]">{item.role}</h3>
-                  <div className="text-sm text-gray-600 mt-0.5">
+                  <h3 className="font-semibold text-[var(--color-fg)]">{item.role}</h3>
+                  <div className="text-sm text-[var(--color-fg-muted)] mt-0.5">
                     {item.company}
                   </div>
-                  <div className="text-xs text-gray-400 mt-0.5">
+                  <div className="text-xs text-[var(--color-fg-subtle)] mt-0.5">
                     {item.period}
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-[var(--color-fg-muted)] mt-2">
                     {item.description}
                   </p>
                   {item.tags && item.tags.length > 0 && (
@@ -61,7 +61,7 @@ export default function Experience() {
                       {item.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
+                          className="text-xs bg-[var(--color-border-subtle)] text-[var(--color-fg-muted)] px-2 py-0.5 rounded"
                         >
                           {tag}
                         </span>
@@ -74,7 +74,7 @@ export default function Experience() {
           </div>
         </div>
       ) : (
-        <p className="text-gray-500 text-center py-12">No experience listed.</p>
+        <p className="text-[var(--color-fg-subtle)] text-center py-12">No experience listed.</p>
       )}
     </div>
   );

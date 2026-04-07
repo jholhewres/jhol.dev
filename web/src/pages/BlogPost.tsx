@@ -20,6 +20,7 @@ export default function BlogPost() {
   const [post, setPost] = useState<Post | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [readingMode, setReadingMode] = useState(false);
+  const [views, setViews] = useState<number | null>(null);
   useSEO(post ? {
     title: post.title,
     description: post.summary,
@@ -38,7 +39,24 @@ export default function BlogPost() {
         setNotFound(false);
       })
       .catch(() => setNotFound(true));
+
+    fetch(`/api/posts/${slug}/views`)
+      .then((r) => r.json())
+      .then((d) => setViews(typeof d?.views === "number" ? d.views : 0))
+      .catch(() => setViews(null));
   }, [slug, lang]);
+
+  // Increment view count once per session
+  useEffect(() => {
+    if (!slug) return;
+    const key = `viewed_${slug}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+    fetch(`/api/posts/${slug}/view`, { method: "POST" })
+      .then((r) => r.json())
+      .then((d) => setViews(typeof d?.views === "number" ? d.views : null))
+      .catch(() => {});
+  }, [slug]);
 
   // ESC exits reading mode
   useEffect(() => {
@@ -63,15 +81,15 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="py-8 animate-pulse space-y-4">
-        <div className="h-4 bg-gray-200 rounded w-16" />
-        <div className="h-8 bg-gray-200 rounded w-3/4 mt-4" />
-        <div className="h-3 bg-gray-100 rounded w-1/3" />
+        <div className="h-4 bg-[var(--color-border)] rounded w-16" />
+        <div className="h-8 bg-[var(--color-border)] rounded w-3/4 mt-4" />
+        <div className="h-3 bg-[var(--color-border-subtle)] rounded w-1/3" />
         <div className="space-y-3 mt-8">
-          <div className="h-4 bg-gray-100 rounded w-full" />
-          <div className="h-4 bg-gray-100 rounded w-5/6" />
-          <div className="h-4 bg-gray-100 rounded w-4/6" />
-          <div className="h-4 bg-gray-100 rounded w-full" />
-          <div className="h-4 bg-gray-100 rounded w-3/4" />
+          <div className="h-4 bg-[var(--color-border-subtle)] rounded w-full" />
+          <div className="h-4 bg-[var(--color-border-subtle)] rounded w-5/6" />
+          <div className="h-4 bg-[var(--color-border-subtle)] rounded w-4/6" />
+          <div className="h-4 bg-[var(--color-border-subtle)] rounded w-full" />
+          <div className="h-4 bg-[var(--color-border-subtle)] rounded w-3/4" />
         </div>
       </div>
     );
@@ -106,13 +124,13 @@ export default function BlogPost() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setLang(lang === "en" ? "pt" : "en")}
-            className="text-xs text-gray-400 hover:text-gray-600 transition-colors border border-gray-200 rounded px-1.5 py-0.5"
+            className="text-xs text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-muted)] transition-colors border border-[var(--color-border)] rounded px-1.5 py-0.5"
           >
             {lang === "en" ? "br" : "en"}
           </button>
         <button
           onClick={() => setReadingMode(!readingMode)}
-          className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1 rounded border border-transparent hover:border-gray-200"
+          className="inline-flex items-center gap-1.5 text-xs text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-muted)] transition-colors px-2 py-1 rounded border border-transparent hover:border-[var(--color-border)]"
           aria-label={readingMode ? "Exit reading mode" : "Enter reading mode"}
           title={readingMode ? "Exit reading mode" : "Reading mode"}
         >
@@ -130,7 +148,7 @@ export default function BlogPost() {
 
       <header className={`mt-4 mb-8 transition-all duration-300 ${readingMode ? "text-center mb-12" : ""}`}>
         <h1 className={`font-bold mb-2 transition-all duration-300 ${readingMode ? "text-3xl" : "text-2xl"}`}>{post.title}</h1>
-        <div className={`flex items-center gap-2 text-sm text-gray-500 ${readingMode ? "justify-center" : ""}`}>
+        <div className={`flex items-center gap-2 text-sm text-[var(--color-fg-subtle)] ${readingMode ? "justify-center" : ""}`}>
           <time dateTime={post.date}>
             {new Date(post.date + "T00:00:00").toLocaleDateString("en-US", {
               year: "numeric",
@@ -142,13 +160,19 @@ export default function BlogPost() {
           <span>
             {post.reading_time} {t("blog.reading_time")}
           </span>
+          {views !== null && (
+            <>
+              <span>&middot;</span>
+              <span>{views} view{views === 1 ? "" : "s"}</span>
+            </>
+          )}
         </div>
         {!readingMode && post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-3">
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
+                className="text-xs bg-[var(--color-border-subtle)] text-[var(--color-fg-muted)] px-2 py-0.5 rounded"
               >
                 {tag}
               </span>
@@ -162,7 +186,7 @@ export default function BlogPost() {
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      <div className={`mt-10 pt-6 border-t border-gray-100 transition-opacity duration-300 ${readingMode ? "opacity-0 pointer-events-none h-0 mt-0 pt-0 border-0 overflow-hidden" : ""}`}>
+      <div className={`mt-10 pt-6 border-t border-[var(--color-border-subtle)] transition-opacity duration-300 ${readingMode ? "opacity-0 pointer-events-none h-0 mt-0 pt-0 border-0 overflow-hidden" : ""}`}>
         <LikeButton slug={post.slug} />
       </div>
     </article>

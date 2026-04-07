@@ -4,6 +4,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useSEO } from "../hooks/useSEO";
 import PostCard from "../components/PostCard";
 import { PostListSkeleton } from "../components/Skeleton";
+import ThemeToggle from "../components/ThemeToggle";
 
 interface PostSummary {
   slug: string;
@@ -24,7 +25,7 @@ export default function Home() {
     setLoading(true);
     fetch(`/api/posts?lang=${lang}`)
       .then((r) => r.json())
-      .then((data) => setPosts(data?.slice(0, 5) ?? []))
+      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 5) : []))
       .catch(() => setPosts([]))
       .finally(() => setLoading(false));
   }, [lang]);
@@ -36,11 +37,11 @@ export default function Home() {
         <img
           src="/avatar.jpg"
           alt="Jhol Hewres"
-          className="w-24 h-24 rounded-full object-cover border-2 border-gray-100 mb-4"
+          className="w-24 h-24 rounded-full object-cover border-2 border-[var(--color-border-subtle)] mb-4"
         />
-        <h1 className="text-2xl font-bold text-[#1a1a1a] mb-1">Jhol Hewres</h1>
-        <p className="text-base text-gray-600 font-medium mb-2">{t("home.headline")}</p>
-        <p className="text-sm text-gray-500 mb-5">{t("home.subtitle")}</p>
+        <h1 className="text-2xl font-bold text-[var(--color-fg)] mb-1">Jhol Hewres</h1>
+        <p className="text-base text-[var(--color-fg-muted)] font-medium mb-2">{t("home.headline")}</p>
+        <p className="text-sm text-[var(--color-fg-subtle)] mb-5">{t("home.subtitle")}</p>
 
         {/* Social links */}
         <div className="flex items-center gap-3 mb-6">
@@ -48,7 +49,7 @@ export default function Home() {
             href="https://github.com/jholhewres"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-[#1a1a1a] transition-colors"
+            className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors"
             aria-label="GitHub"
           >
             <svg className="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
@@ -59,7 +60,7 @@ export default function Home() {
             href="https://www.linkedin.com/in/jholh/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-[#1a1a1a] transition-colors"
+            className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors"
             aria-label="LinkedIn"
           >
             <svg className="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
@@ -70,7 +71,7 @@ export default function Home() {
             href="https://www.instagram.com/jhol.dev/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-[#1a1a1a] transition-colors"
+            className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors"
             aria-label="Instagram"
           >
             <svg className="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
@@ -79,7 +80,7 @@ export default function Home() {
           </a>
           <a
             href="mailto:jhol.code@gmail.com"
-            className="text-gray-400 hover:text-[#1a1a1a] transition-colors"
+            className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors"
             aria-label="Email"
           >
             <svg
@@ -100,27 +101,28 @@ export default function Home() {
 
         {/* Inline navigation */}
         <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-          <Link to="/about" className="text-gray-500 hover:text-accent transition-colors">
+          <Link to="/about" className="text-[var(--color-fg-subtle)] hover:text-accent transition-colors">
             {t("nav.about")}
           </Link>
-          <Link to="/blog" className="text-gray-500 hover:text-accent transition-colors">
+          <Link to="/blog" className="text-[var(--color-fg-subtle)] hover:text-accent transition-colors">
             {t("nav.blog")}
           </Link>
-          <Link to="/projects" className="text-gray-500 hover:text-accent transition-colors">
+          <Link to="/projects" className="text-[var(--color-fg-subtle)] hover:text-accent transition-colors">
             {t("nav.projects")}
           </Link>
-          <Link to="/experience" className="text-gray-500 hover:text-accent transition-colors">
+          <Link to="/experience" className="text-[var(--color-fg-subtle)] hover:text-accent transition-colors">
             {t("nav.experience")}
           </Link>
-          <Link to="/contact" className="text-gray-500 hover:text-accent transition-colors">
+          <Link to="/contact" className="text-[var(--color-fg-subtle)] hover:text-accent transition-colors">
             {t("nav.contact")}
           </Link>
           <button
             onClick={() => setLang(lang === "en" ? "pt" : "en")}
-            className="text-gray-400 hover:text-[#1a1a1a] transition-colors border border-gray-200 rounded px-1.5 py-0.5 text-xs"
+            className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg)] transition-colors border border-[var(--color-border)] rounded px-1.5 py-0.5 text-xs"
           >
             {lang === "en" ? "br" : "en"}
           </button>
+          <ThemeToggle />
         </nav>
       </section>
 

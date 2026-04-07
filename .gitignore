@@ -18,3 +18,17 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Runtime data (user-generated, never commit)
+data/
+*.tsbuildinfo
+
+# Tooling / orchestration state
+.omc/
+.playwright-mcp/
+
+# Local-only build artifacts
+/server
+*.png
+!web/public/*.png
+!web/public/*.jpg

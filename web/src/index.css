@@ -2,12 +2,35 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-bg: #ffffff;
+  --color-fg: #1a1a1a;
+  --color-fg-muted: #4b5563;
+  --color-fg-subtle: #6b7280;
+  --color-border: #e5e7eb;
+  --color-border-subtle: #f3f4f6;
+  --color-card: #ffffff;
   --color-accent: #2563eb;
   --color-accent-hover: #1d4ed8;
+  --color-code-bg: #1e1e2e;
+  --color-code-fg: #cdd6f4;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0f1115;
+  --color-fg: #e6e7ea;
+  --color-fg-muted: #9ca3af;
+  --color-fg-subtle: #6b7280;
+  --color-border: #1f2430;
+  --color-border-subtle: #161a22;
+  --color-card: #141821;
+  --color-accent: #60a5fa;
+  --color-accent-hover: #93c5fd;
+  /* code stays the same — it's already dark */
 }
 
 body {
-  color: #1a1a1a;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -73,11 +96,11 @@ body {
 }
 
 .prose blockquote {
-  border-left: 3px solid #d1d5db;
+  border-left: 3px solid var(--color-border);
   padding-left: 1em;
   margin-left: 0;
   margin-bottom: 1.25em;
-  color: #4b5563;
+  color: var(--color-fg-muted);
   font-style: italic;
 }
 
@@ -100,8 +123,8 @@ body {
 }
 
 .prose :not(pre) > code {
-  background-color: #e8eaf0;
-  color: #383a42;
+  background-color: var(--color-border-subtle);
+  color: var(--color-fg-muted);
   padding: 0.15em 0.4em;
   border-radius: 0.25rem;
   font-size: 0.85em;
@@ -114,7 +137,7 @@ body {
 }
 
 .prose hr {
-  border-color: #e5e7eb;
+  border-color: var(--color-border-subtle);
   margin: 2em 0;
 }
 
@@ -126,14 +149,20 @@ body {
 
 .prose th,
 .prose td {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   padding: 0.5em 0.75em;
   text-align: left;
 }
 
 .prose th {
-  background-color: #f9fafb;
+  background-color: var(--color-card);
   font-weight: 600;
+}
+
+/* Dark mode prose overrides — code stays catppuccin in both themes */
+[data-theme="dark"] .prose :not(pre) > code {
+  background-color: #1a1e2e;
+  color: var(--color-fg-muted);
 }
 
 /* Animations */
@@ -163,7 +192,7 @@ body {
   animation: like-pop 0.3s ease-out;
 }
 
-/* Reading mode */
+/* Reading mode is intentionally sepia in both themes — it's a focus mode, not a theme variant */
 .reading-mode {
   max-width: 600px;
   margin: 0 auto;

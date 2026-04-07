@@ -1,8 +1,10 @@
 package middleware
 
 import (
+	"bytes"
 	"compress/gzip"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -247,5 +249,54 @@ func TestChain(t *testing.T) {
 		if order[i] != v {
 			t.Errorf("order[%d] = %q, want %q", i, order[i], v)
 		}
+	}
+}
+
+func TestLoggerWritesAccessLine(t *testing.T) {
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	defer log.SetOutput(nil)
+
+	handler := Logger(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest(http.MethodGet, "/test-path", nil)
+	req.Header.Set("CF-IPCountry", "BR")
+	req.Header.Set("User-Agent", "TestBrowser/1.0")
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	line := buf.String()
+	if !strings.Contains(line, "GET") {
+		t.Errorf("log line missing method GET: %q", line)
+	}
+	if !strings.Contains(line, "/test-path") {
+		t.Errorf("log line missing path /test-path: %q", line)
+	}
+	if !strings.Contains(line, "200") {
+		t.Errorf("log line missing status 200: %q", line)
+	}
+	if !strings.Contains(line, "BR") {
+		t.Errorf("log line missing country BR: %q", line)
+	}
+}
+
+func TestLoggerCapturesStatusCode(t *testing.T) {
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	defer log.SetOutput(nil)
+
+	handler := Logger(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusTeapot) // 418
+	}))
+
+	req := httptest.NewRequest(http.MethodGet, "/teapot", nil)
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	line := buf.String()
+	if !strings.Contains(line, "418") {
+		t.Errorf("log line missing status 418: %q", line)
 	}
 }

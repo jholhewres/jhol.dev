@@ -22,7 +22,7 @@ export default function Projects() {
     setLoading(true);
     fetch(`/api/projects?lang=${lang}`)
       .then((r) => r.json())
-      .then((data) => setProjects(data ?? []))
+      .then((data) => setProjects(Array.isArray(data) ? data : []))
       .catch(() => setProjects([]))
       .finally(() => setLoading(false));
   }, [lang]);
@@ -41,7 +41,7 @@ export default function Projects() {
         <div className="animate-fade-in">
           {featured.length > 0 && (
             <div className="mb-10">
-              <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
+              <h2 className="text-sm font-medium text-[var(--color-fg-subtle)] uppercase tracking-wide mb-4">
                 {t("projects.featured")}
               </h2>
               <div className="grid gap-4">
@@ -61,7 +61,7 @@ export default function Projects() {
           )}
 
           {projects.length === 0 && (
-            <p className="text-gray-500 text-center py-12">No projects yet.</p>
+            <p className="text-[var(--color-fg-subtle)] text-center py-12">No projects yet.</p>
           )}
         </div>
       )}
@@ -75,20 +75,20 @@ function ProjectCard({ project }: { project: Project }) {
       href={project.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block border border-gray-100 rounded-lg p-4 hover:border-gray-300 transition-colors group"
+      className="block border border-[var(--color-border-subtle)] rounded-lg p-4 hover:border-[var(--color-border)] transition-colors group"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-semibold text-[#1a1a1a] group-hover:text-accent transition-colors">
+          <h3 className="font-semibold text-[var(--color-fg)] group-hover:text-accent transition-colors">
             {project.name}
           </h3>
-          <p className="text-sm text-gray-600 mt-1">{project.description}</p>
+          <p className="text-sm text-[var(--color-fg-muted)] mt-1">{project.description}</p>
           {project.tags && project.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {project.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
+                  className="text-xs bg-[var(--color-border-subtle)] text-[var(--color-fg-muted)] px-2 py-0.5 rounded"
                 >
                   {tag}
                 </span>
@@ -97,7 +97,7 @@ function ProjectCard({ project }: { project: Project }) {
           )}
         </div>
         <svg
-          className="w-4 h-4 text-gray-400 group-hover:text-accent transition-colors shrink-0 mt-1"
+          className="w-4 h-4 text-[var(--color-fg-subtle)] group-hover:text-accent transition-colors shrink-0 mt-1"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

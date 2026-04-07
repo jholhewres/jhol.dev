@@ -25,7 +25,7 @@ export default function Blog() {
     setLoading(true);
     fetch(`/api/posts?lang=${lang}`)
       .then((r) => r.json())
-      .then((data) => setPosts(data ?? []))
+      .then((data) => setPosts(Array.isArray(data) ? data : []))
       .catch(() => setPosts([]))
       .finally(() => setLoading(false));
   }, [lang]);
@@ -47,7 +47,7 @@ export default function Blog() {
             className={`text-xs px-2.5 py-1 rounded transition-colors ${
               !filterTag
                 ? "bg-accent text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-[var(--color-border-subtle)] text-[var(--color-fg-muted)] hover:bg-[var(--color-border)]"
             }`}
           >
             All
@@ -59,7 +59,7 @@ export default function Blog() {
               className={`text-xs px-2.5 py-1 rounded transition-colors ${
                 tag === filterTag
                   ? "bg-accent text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-[var(--color-border-subtle)] text-[var(--color-fg-muted)] hover:bg-[var(--color-border)]"
               }`}
             >
               {tag}
@@ -86,7 +86,7 @@ export default function Blog() {
             ))}
           </div>
           {filtered.length === 0 && (
-            <p className="text-gray-500 text-center py-12">No posts yet.</p>
+            <p className="text-[var(--color-fg-subtle)] text-center py-12">No posts yet.</p>
           )}
         </>
       )}

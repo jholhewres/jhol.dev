@@ -8,14 +8,16 @@ import (
 
 	"jhol.dev/internal/content"
 	"jhol.dev/internal/likes"
+	"jhol.dev/internal/views"
 )
 
 type API struct {
 	store      *content.Store
 	likesStore *likes.Store
+	viewsStore *views.Store
 }
 
-func NewAPI(store *content.Store, dataDir string) *API {
+func NewAPI(store *content.Store, dataDir string, viewsStore *views.Store) *API {
 	ls, err := likes.New(dataDir)
 	if err != nil {
 		log.Printf("warning: likes store at %s failed: %v, falling back to /tmp", dataDir, err)
@@ -24,7 +26,7 @@ func NewAPI(store *content.Store, dataDir string) *API {
 			log.Printf("warning: likes store fallback also failed: %v, likes disabled", err)
 		}
 	}
-	return &API{store: store, likesStore: ls}
+	return &API{store: store, likesStore: ls, viewsStore: viewsStore}
 }
 
 func (a *API) RegisterRoutes(mux *http.ServeMux) {
@@ -32,6 +34,8 @@ func (a *API) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/posts/{slug}", a.getPost)
 	mux.HandleFunc("GET /api/posts/{slug}/likes", a.getLikes)
 	mux.HandleFunc("POST /api/posts/{slug}/like", a.addLike)
+	mux.HandleFunc("GET /api/posts/{slug}/views", a.getViews)
+	mux.HandleFunc("POST /api/posts/{slug}/view", a.addView)
 	mux.HandleFunc("GET /api/projects", a.listProjects)
 	mux.HandleFunc("GET /api/experience", a.listExperience)
 	mux.HandleFunc("GET /api/about", a.getAbout)
@@ -171,6 +175,46 @@ func (a *API) getAbout(w http.ResponseWriter, r *http.Request) {
 		about = a.store.About["en"]
 	}
 	writeJSON(w, about)
+}
+
+func (a *API) getViews(w http.ResponseWriter, r *http.Request) {
+	if a.viewsStore == nil {
+		writeJSON(w, map[string]int{"views": 0})
+		return
+	}
+	slug := r.PathValue("slug")
+	count := a.viewsStore.Get(slug)
+	writeJSON(w, map[string]int{"views": count})
+}
+
+func (a *API) addView(w http.ResponseWriter, r *http.Request) {
+	if a.viewsStore == nil {
+		http.Error(w, "Views not available", http.StatusServiceUnavailable)
+		return
+	}
+	slug := r.PathValue("slug")
+
+	// Verify post exists
+	found := false
+	for _, lang := range []string{"en", "pt"} {
+		if pm, ok := a.store.PostMap[lang]; ok {
+			if _, ok := pm[slug]; ok {
+				found = true
+				break
+			}
+		}
+	}
+	if !found {
+		http.NotFound(w, r)
+		return
+	}
+
+	count, err := a.viewsStore.Increment(slug)
+	if err != nil {
+		http.Error(w, "Failed to save view", http.StatusInternalServerError)
+		return
+	}
+	writeJSON(w, map[string]int{"views": count})
 }
 
 func (a *API) submitContact(w http.ResponseWriter, r *http.Request) {

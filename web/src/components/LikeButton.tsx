@@ -42,7 +42,7 @@ export default function LikeButton({ slug }: Props) {
       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all border ${
         liked
           ? "bg-red-50 border-red-200 text-red-500"
-          : "bg-white border-gray-200 text-gray-500 hover:border-red-200 hover:text-red-400"
+          : "bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-fg-subtle)] hover:border-red-200 hover:text-red-400"
       }`}
       aria-label={liked ? "Liked" : "Like this post"}
     >

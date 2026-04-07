@@ -7,7 +7,28 @@ import (
 	"strings"
 
 	"jhol.dev/internal/content"
+	"jhol.dev/internal/uaclass"
 )
+
+// spaRoutes lists all known SPA client-side routes.
+// NOTE: When adding a new route in App.tsx, also add it here so the server
+// returns 200 (not 404) for crawlers and direct navigation.
+var spaRoutes = []string{
+	"/", "/about", "/blog", "/projects", "/experience", "/contact", "/admin/stats",
+}
+
+func isKnownSPARoute(path string) bool {
+	for _, r := range spaRoutes {
+		if path == r {
+			return true
+		}
+	}
+	// /blog/<slug> is also valid
+	if strings.HasPrefix(path, "/blog/") && len(path) > len("/blog/") {
+		return true
+	}
+	return false
+}
 
 type SPA struct {
 	fileFS  fs.FS
@@ -21,22 +42,6 @@ func NewSPA(fsys fs.FS, store *content.Store) *SPA {
 		handler: http.FileServer(http.FS(fsys)),
 		store:   store,
 	}
-}
-
-var crawlerAgents = []string{
-	"linkedinbot", "facebookexternalhit", "twitterbot",
-	"slackbot", "telegrambot", "whatsapp", "googlebot",
-	"bingbot", "yandexbot", "baiduspider", "duckduckbot",
-}
-
-func isCrawler(ua string) bool {
-	lower := strings.ToLower(ua)
-	for _, bot := range crawlerAgents {
-		if strings.Contains(lower, bot) {
-			return true
-		}
-	}
-	return false
 }
 
 func (s *SPA) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -70,12 +75,18 @@ func (s *SPA) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	html := string(indexFile)
 
 	// For crawlers, inject dynamic meta tags based on the route
-	if isCrawler(r.UserAgent()) {
+	if uaclass.IsCrawler(r.UserAgent()) {
 		html = s.injectSEO(html, r.URL.Path)
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-cache")
+	// Return 404 for routes not in the known SPA whitelist so crawlers get
+	// correct HTTP status. The body still contains index.html so the React
+	// NotFound page can render for real browsers.
+	if !isKnownSPARoute(r.URL.Path) {
+		w.WriteHeader(http.StatusNotFound)
+	}
 	w.Write([]byte(html))
 }
 
