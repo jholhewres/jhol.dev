@@ -26,6 +26,8 @@ data/
 # Tooling / orchestration state
 .omc/
 .playwright-mcp/
+.mempalace/
+node-compile-cache/
 
 # Local-only build artifacts
 /server
