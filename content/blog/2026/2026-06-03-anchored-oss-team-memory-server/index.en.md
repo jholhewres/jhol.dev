@@ -213,7 +213,7 @@ From there the dev never thinks about it again. Local keeps working offline; whe
 
 ## Acknowledgments
 
-A special thanks to [Aron](https://github.com/aronpc), a friend and work colleague who's been in it since the beginning — in the logic discussions, in testing the cross-machine flow, and who keeps helping on the project. Team memory tested for real requires a team, even a small one.
+A special thanks to [Aron](https://github.com/aronpc), a friend and work colleague who's been in it since the beginning — in the logic discussions, in testing the cross-machine flow, and who keeps helping on the project.
 
 ---
 

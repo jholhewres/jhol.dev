@@ -213,7 +213,7 @@ A partir daí o dev não pensa mais nisso. O local continua funcionando offline;
 
 ## Agradecimentos
 
-Um agradecimento especial ao [Aron](https://github.com/aronpc), amigo e colega de trabalho que esteve junto desde o início — nas discussões de lógica, nos testes do fluxo entre máquinas, e que continua auxiliando no projeto. Memória de time testada de verdade exige um time, mesmo que pequeno.
+Um agradecimento especial ao [Aron](https://github.com/aronpc), amigo e colega de trabalho que esteve junto desde o início — nas discussões de lógica, nos testes do fluxo entre máquinas, e que continua auxiliando no projeto.
 
 ---
 
