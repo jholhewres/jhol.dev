@@ -1,3 +1,15 @@
+- name: "Anchored"
+  description: "Memória persistente e cross-tool para agentes de IA. Servidor MCP local-first em Go: busca híbrida (vetorial + BM25), embeddings ONNX locais, knowledge graph bitemporal. Uma memória para Claude Code, Cursor, OpenCode, Gemini CLI e mais — 100% offline."
+  tags: [go, ai, mcp, memory, sqlite]
+  url: "https://github.com/jholhewres/anchored"
+  featured: true
+
+- name: "Anchored OSS"
+  description: "Servidor self-hosted de memória de time para devs que programam com IA. Sincroniza fatos, decisões e aprendizados de projeto entre máquinas e ferramentas, com guardrails de privacidade, audit log e dashboard embutido. Binário único em Go, Postgres ou SQLite."
+  tags: [go, ai, memory, self-hosted, team, react]
+  url: "https://github.com/jholhewres/anchored_oss"
+  featured: true
+
 - name: "DevClaw"
   description: "Agente de IA para times de dev. Binario unico, roda em qualquer lugar. Automatiza code review, testes e workflows de deploy."
   tags: [go, ai, cli, devtools]

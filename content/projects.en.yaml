@@ -1,3 +1,15 @@
+- name: "Anchored"
+  description: "Persistent, cross-tool memory for AI agents. Local-first MCP server in Go: hybrid search (vector + BM25), local ONNX embeddings, bitemporal knowledge graph. One memory for Claude Code, Cursor, OpenCode, Gemini CLI, and more — 100% offline."
+  tags: [go, ai, mcp, memory, sqlite]
+  url: "https://github.com/jholhewres/anchored"
+  featured: true
+
+- name: "Anchored OSS"
+  description: "Self-hosted team memory server for devs who code with AI. Syncs project facts, decisions, and learnings across machines and tools, with privacy guardrails, audit log, and an embedded dashboard. Single Go binary, Postgres or SQLite."
+  tags: [go, ai, memory, self-hosted, team, react]
+  url: "https://github.com/jholhewres/anchored_oss"
+  featured: true
+
 - name: "DevClaw"
   description: "AI agent for dev teams. Single binary, runs everywhere. Automates code review, testing, and deployment workflows."
   tags: [go, ai, cli, devtools]
