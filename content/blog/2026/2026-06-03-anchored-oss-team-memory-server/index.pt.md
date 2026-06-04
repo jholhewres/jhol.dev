@@ -152,7 +152,7 @@ dev B abre sessão no mesmo repo                         |
     use scanTime/scanNullTime em todo scan de timestamp"
 ```
 
-Semanas depois, qualquer dev (ou o agente dele) que tocar num arquivo de store recebe esse contexto automaticamente. Ninguém escreveu doc, ninguém avisou no Slack, ninguém repetiu o erro. **É isso que significa escalar o aprendizado: o time inteiro erra cada erro uma vez só.**
+Semanas depois, qualquer dev (ou o agente dele) que tocar num arquivo de store recebe esse contexto automaticamente. Ninguém escreveu doc, ninguém avisou no Teams, ninguém repetiu o erro. **É isso que significa escalar o aprendizado: o time inteiro erra cada erro uma vez só.**
 
 O efeito composto aparece em quatro frentes:
 

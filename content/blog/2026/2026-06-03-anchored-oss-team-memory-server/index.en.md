@@ -152,7 +152,7 @@ dev B opens a session in the same repo                      |
     use scanTime/scanNullTime on every timestamp scan"
 ```
 
-Weeks later, any dev (or their agent) touching a store file gets that context automatically. Nobody wrote a doc, nobody posted on Slack, nobody repeated the mistake. **That's what scaling learning means: the whole team makes every mistake only once.**
+Weeks later, any dev (or their agent) touching a store file gets that context automatically. Nobody wrote a doc, nobody posted on Teams, nobody repeated the mistake. **That's what scaling learning means: the whole team makes every mistake only once.**
 
 The compound effect shows up on four fronts:
 
