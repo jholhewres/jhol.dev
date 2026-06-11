@@ -11,7 +11,13 @@ interface Post {
   tags: string[];
   summary: string;
   reading_time: number;
+  image?: string;
   content: string;
+}
+
+function absoluteImage(image?: string): string | undefined {
+  if (!image) return undefined;
+  return image.startsWith("/") ? `https://jhol.dev${image}` : image;
 }
 
 export default function BlogPost() {
@@ -26,6 +32,7 @@ export default function BlogPost() {
     description: post.summary,
     url: `/blog/${post.slug}`,
     type: "article",
+    image: absoluteImage(post.image),
   } : {});
 
   useEffect(() => {
@@ -104,6 +111,7 @@ export default function BlogPost() {
     author: { "@type": "Person", name: "Jhol Hewres" },
     url: `https://jhol.dev/blog/${post.slug}`,
     keywords: post.tags?.join(", "),
+    ...(post.image ? { image: absoluteImage(post.image) } : {}),
   };
 
   return (

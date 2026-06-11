@@ -102,12 +102,19 @@ func (s *SPA) injectSEO(html, urlPath string) string {
 			for _, lang := range []string{"en", "pt"} {
 				if postMap, ok := s.store.PostMap[lang]; ok {
 					if post, ok := postMap[slug]; ok {
+						image := baseURL + "/og-blog.png"
+						if post.Image != "" {
+							image = post.Image
+							if strings.HasPrefix(image, "/") {
+								image = baseURL + image
+							}
+						}
 						return replaceMeta(html,
 							post.Title+" — Jhol Hewres",
 							post.Summary,
 							baseURL+"/blog/"+slug,
 							"article",
-							baseURL+"/og-blog.png",
+							image,
 						)
 					}
 				}

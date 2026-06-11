@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strings"
 
 	"jhol.dev/internal/content"
@@ -40,6 +41,26 @@ func (a *API) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/experience", a.listExperience)
 	mux.HandleFunc("GET /api/about", a.getAbout)
 	mux.HandleFunc("POST /api/contact", a.submitContact)
+	mux.HandleFunc("GET /blog-images/{slug}/{file}", a.getPostImage)
+}
+
+var imageExts = map[string]bool{
+	".png": true, ".jpg": true, ".jpeg": true, ".gif": true,
+	".webp": true, ".svg": true, ".avif": true,
+}
+
+func (a *API) getPostImage(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	file := r.PathValue("file")
+
+	dir, ok := a.store.PostDirs[slug]
+	if !ok || file != filepath.Base(file) || !imageExts[strings.ToLower(filepath.Ext(file))] {
+		http.NotFound(w, r)
+		return
+	}
+
+	w.Header().Set("Cache-Control", "public, max-age=86400")
+	http.ServeFile(w, r, filepath.Join(dir, file))
 }
 
 func lang(r *http.Request) string {
@@ -69,6 +90,7 @@ func (a *API) listPosts(w http.ResponseWriter, r *http.Request) {
 		Tags        []string `json:"tags"`
 		Summary     string   `json:"summary"`
 		ReadingTime int      `json:"reading_time"`
+		Image       string   `json:"image,omitempty"`
 	}
 
 	summaries := make([]postSummary, len(posts))
@@ -80,6 +102,7 @@ func (a *API) listPosts(w http.ResponseWriter, r *http.Request) {
 			Tags:        p.Tags,
 			Summary:     p.Summary,
 			ReadingTime: p.ReadingTime,
+			Image:       p.Image,
 		}
 	}
 

@@ -24,6 +24,7 @@ type Post struct {
 	Tags        []string `json:"tags"`
 	Summary     string   `json:"summary"`
 	ReadingTime int      `json:"reading_time"`
+	Image       string   `json:"image,omitempty"`
 	Content     string   `json:"content,omitempty"`
 }
 
@@ -50,6 +51,7 @@ type AboutContent struct {
 type Store struct {
 	Posts      map[string][]Post       // lang -> sorted posts
 	PostMap   map[string]map[string]Post // lang -> slug -> post
+	PostDirs   map[string]string        // slug -> post directory on disk (for serving images)
 	Projects   map[string][]Project    // lang -> projects
 	Experience map[string][]Experience // lang -> experience
 	About      map[string]AboutContent // lang -> about HTML
@@ -78,6 +80,7 @@ func Load(contentDir string) (*Store, error) {
 	s := &Store{
 		Posts:      make(map[string][]Post),
 		PostMap:    make(map[string]map[string]Post),
+		PostDirs:   make(map[string]string),
 		Projects:   make(map[string][]Project),
 		Experience: make(map[string][]Experience),
 		About:      make(map[string]AboutContent),
@@ -192,6 +195,7 @@ func (s *Store) loadPostDir(postDir, dirName string) error {
 			return fmt.Errorf("parsing %s/%s: %w", dirName, name, err)
 		}
 
+		s.PostDirs[urlSlug] = postDir
 		s.Posts[lang] = append(s.Posts[lang], post)
 
 		if s.PostMap[lang] == nil {
@@ -209,6 +213,7 @@ type frontmatter struct {
 	Tags        []string `yaml:"tags"`
 	Summary     string   `yaml:"summary"`
 	ReadingTime int      `yaml:"reading_time"`
+	Image       string   `yaml:"image"`
 }
 
 func parsePost(data []byte, slug string) (Post, error) {
@@ -235,8 +240,45 @@ func parsePost(data []byte, slug string) (Post, error) {
 		Tags:        fm.Tags,
 		Summary:     fm.Summary,
 		ReadingTime: readingTime,
-		Content:     buf.String(),
+		Image:       imageURL(fm.Image, slug),
+		Content:     rewriteImageSrcs(buf.String(), slug),
 	}, nil
+}
+
+// imageURL resolves a frontmatter image reference to a URL. Bare filenames
+// (e.g. "cover.png") are files in the post directory, served via /blog-images/.
+func imageURL(image, slug string) string {
+	if image == "" || strings.HasPrefix(image, "/") || strings.Contains(image, "://") {
+		return image
+	}
+	return "/blog-images/" + slug + "/" + image
+}
+
+// rewriteImageSrcs points relative <img> sources in rendered markdown at the
+// /blog-images/ handler, so ![alt](photo.png) works for files that live next
+// to the post's index.*.md.
+func rewriteImageSrcs(html, slug string) string {
+	var b strings.Builder
+	for {
+		idx := strings.Index(html, `<img src="`)
+		if idx == -1 {
+			b.WriteString(html)
+			break
+		}
+		srcStart := idx + len(`<img src="`)
+		srcEnd := strings.Index(html[srcStart:], `"`)
+		if srcEnd == -1 {
+			b.WriteString(html)
+			break
+		}
+		src := html[srcStart : srcStart+srcEnd]
+		b.WriteString(html[:srcStart])
+		if !strings.HasPrefix(src, "/") && !strings.Contains(src, "://") && !strings.HasPrefix(src, "data:") {
+			b.WriteString("/blog-images/" + slug + "/")
+		}
+		html = html[srcStart:]
+	}
+	return b.String()
 }
 
 func parseFrontmatter(data []byte) (frontmatter, []byte, error) {
