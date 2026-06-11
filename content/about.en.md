@@ -1,6 +1,6 @@
-I'm **Jhol Hewres**, an AI Engineer building production-ready AI systems — not just notebooks.
+I'm **Jhol Hewres**, a Principal Software Engineer building open source & production-ready AI systems — not just notebooks.
 
-Currently at **HostGator Latin America**, I'm part of the AI squad leading the technical development of **SuperGator** — a conversational AI agent platform serving thousands of users via WhatsApp and web with 24/7 automated support.
+Currently a **Principal Software Engineer** at **HostGator Latin America**, working on strategic AI initiatives applied to products — including **GatorClaw**, an AI agent platform born from my open-source project **devclaw** that now also serves Bluehost, and **GatorLLM**, the LLM gateway that centralizes model consumption across HostGator products.
 
 Previously, I co-founded **IntegraBot.ai**, a no-code platform for creating and deploying AI agents integrated with WhatsApp Business API, serving hospitality, real estate, and legal services.
 

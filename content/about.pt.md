@@ -1,6 +1,6 @@
-Sou **Jhol Hewres**, Engenheiro de IA construindo sistemas de IA que funcionam em produção — não apenas em notebooks.
+Sou **Jhol Hewres**, Principal Software Engineer construindo sistemas de IA open source e prontos para produção — não apenas em notebooks.
 
-Atualmente na **HostGator América Latina**, faço parte da squad de IA liderando o desenvolvimento técnico do **SuperGator** — plataforma de agentes de IA conversacionais que atende milhares de usuários via WhatsApp e web com suporte automatizado 24/7.
+Atualmente sou **Principal Software Engineer** na **HostGator América Latina**, atuando em iniciativas estratégicas de IA aplicadas a produtos — incluindo o **GatorClaw**, plataforma de agentes de IA nascida do meu projeto open source **devclaw** e que hoje também atende a Bluehost, e o **GatorLLM**, gateway de LLMs que centraliza o consumo de modelos nos produtos da HostGator.
 
 Anteriormente, co-fundei a **IntegraBot.ai**, plataforma no-code para criação e deploy de agentes de IA integrados a WhatsApp Business API, atendendo hotelaria, imobiliárias e serviços jurídicos.
 

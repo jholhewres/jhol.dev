@@ -8,7 +8,7 @@ export default function About() {
   const { lang, t } = useLanguage();
   const [html, setHtml] = useState("");
   const [loading, setLoading] = useState(true);
-  useSEO({ title: "About", description: "Learn more about Jhol Hewres — AI Engineer.", url: "/about" });
+  useSEO({ title: "About", description: "Learn more about Jhol Hewres — Principal Software Engineer.", url: "/about" });
 
   useEffect(() => {
     setLoading(true);

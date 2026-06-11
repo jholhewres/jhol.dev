@@ -10,7 +10,7 @@ interface SEOProps {
 
 const SITE_NAME = "Jhol Hewres";
 const DEFAULT_DESC =
-  "AI Engineer building production-ready AI systems. Multi-agent architecture, RAG & LLMOps.";
+  "Principal Software Engineer. AI Agents & Developer Tooling — building open source & production-ready AI systems.";
 const BASE_URL = "https://jhol.dev";
 const DEFAULT_IMAGE = `${BASE_URL}/avatar.jpg`;
 const BLOG_IMAGE = `${BASE_URL}/og-blog.png`;
@@ -28,7 +28,7 @@ function setMeta(property: string, content: string, isOG = false) {
 
 export function useSEO({ title, description, url, type, image }: SEOProps) {
   useEffect(() => {
-    const fullTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — AI & Software Engineer`;
+    const fullTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — Principal Software Engineer`;
     const desc = description || DEFAULT_DESC;
     const pageUrl = url ? `${BASE_URL}${url}` : BASE_URL;
     const ogType = type || "website";

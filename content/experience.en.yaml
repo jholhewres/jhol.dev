@@ -1,7 +1,7 @@
 - role: "Principal | Software Engineer Specialist"
   company: "HostGator Latin America"
   period: "May 2026 - Present"
-  description: "Technical reference for AI engineering at HostGator Latin America. Cross-team work on generative AI platform architecture: multi-LLM gateway/middleware with credit-based billing, conversational agents, and integrations at scale. Sets engineering standards, provides technical mentorship, and drives production cloud architecture decisions."
+  description: "Principal Software Engineer working on strategic AI initiatives applied to HostGator Latin America products. End-to-end involvement in the product development lifecycle — from problem analysis and technical planning to architecture and implementation. Main products: GatorClaw, an AI agent platform based on the open-source project devclaw that now also serves Bluehost; and GatorLLM, an LLM provider gateway centralizing integrations, standardizing model consumption, and controlling usage, costs, and traceability."
   tags: [ai, go, aws, llmops, architecture, leadership, typescript, python]
 
 - role: "AI Engineer | Senior Software Engineer"

@@ -135,7 +135,7 @@ func (s *SEO) rssFeed(w http.ResponseWriter, r *http.Request) {
 		Channel: rssChannel{
 			Title:       "Jhol Hewres — Blog",
 			Link:        baseURL,
-			Description: "AI Engineer building production-ready AI systems. Multi-agent architecture, RAG & LLMOps.",
+			Description: "Principal Software Engineer. AI Agents & Developer Tooling — building open source & production-ready AI systems.",
 			Language:    "en",
 			PubDate:     pubDate,
 			Items:       items,

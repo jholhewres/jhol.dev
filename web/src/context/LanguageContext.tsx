@@ -16,12 +16,12 @@ const translations: Record<string, Record<Lang, string>> = {
   "nav.contact": { en: "Contact", pt: "Contato" },
   "home.greeting": { en: "Hi, I'm", pt: "Olá, eu sou" },
   "home.headline": {
-    en: "AI Engineer",
-    pt: "Engenheiro de IA",
+    en: "Principal Software Engineer",
+    pt: "Principal Software Engineer",
   },
   "home.subtitle": {
-    en: "Building production-ready AI systems. Multi-agent architecture, RAG & LLMOps.",
-    pt: "Construindo sistemas de IA para produção. Arquitetura multi-agentes, RAG & LLMOps.",
+    en: "AI Agents & Developer Tooling. Building open source & production-ready AI systems.",
+    pt: "AI Agents & Developer Tooling. Construindo sistemas de IA open source e prontos para produção.",
   },
   "home.recent_posts": { en: "Recent Posts", pt: "Posts Recentes" },
   "home.view_all": { en: "View all posts", pt: "Ver todos os posts" },
