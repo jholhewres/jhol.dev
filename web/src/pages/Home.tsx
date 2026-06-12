@@ -15,20 +15,33 @@ interface PostSummary {
   reading_time: number;
 }
 
+const POSTS_PER_PAGE = 5;
+
 export default function Home() {
   const { lang, setLang, t } = useLanguage();
   const [posts, setPosts] = useState<PostSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
   useSEO({ url: "/" });
 
   useEffect(() => {
     setLoading(true);
+    setPage(1);
     fetch(`/api/posts?lang=${lang}`)
       .then((r) => r.json())
-      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 5) : []))
+      .then((data) => setPosts(Array.isArray(data) ? data : []))
       .catch(() => setPosts([]))
       .finally(() => setLoading(false));
   }, [lang]);
+
+  const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+  const start = (page - 1) * POSTS_PER_PAGE;
+  const pagePosts = posts.slice(start, start + POSTS_PER_PAGE);
+
+  const goToPage = (next: number) => {
+    setPage(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div>
@@ -140,19 +153,42 @@ export default function Home() {
         {loading ? (
           <PostListSkeleton count={3} />
         ) : (
-          <div className="space-y-6 animate-fade-in">
-            {posts.map((post) => (
-              <PostCard
-                key={post.slug}
-                slug={post.slug}
-                title={post.title}
-                date={post.date}
-                summary={post.summary}
-                tags={post.tags}
-                readingTime={post.reading_time}
-              />
-            ))}
-          </div>
+          <>
+            <div className="space-y-6 animate-fade-in">
+              {pagePosts.map((post) => (
+                <PostCard
+                  key={post.slug}
+                  slug={post.slug}
+                  title={post.title}
+                  date={post.date}
+                  summary={post.summary}
+                  tags={post.tags}
+                  readingTime={post.reading_time}
+                />
+              ))}
+            </div>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-10">
+                <button
+                  onClick={() => goToPage(page - 1)}
+                  disabled={page === 1}
+                  className="text-sm text-[var(--color-fg-subtle)] hover:text-accent transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  &larr; {t("pagination.prev")}
+                </button>
+                <span className="text-xs text-[var(--color-fg-subtle)]">
+                  {t("pagination.page")} {page} {t("pagination.of")} {totalPages}
+                </span>
+                <button
+                  onClick={() => goToPage(page + 1)}
+                  disabled={page === totalPages}
+                  className="text-sm text-[var(--color-fg-subtle)] hover:text-accent transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  {t("pagination.next")} &rarr;
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>
