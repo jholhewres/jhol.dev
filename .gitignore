@@ -28,9 +28,11 @@ data/
 .playwright-mcp/
 .mempalace/
 node-compile-cache/
+.claude/
 
 # Local-only build artifacts
 /server
 *.png
 !web/public/*.png
 !web/public/*.jpg
+!content/**/*.png
