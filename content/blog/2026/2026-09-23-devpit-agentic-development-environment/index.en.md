@@ -143,6 +143,6 @@ It needs `tmux` and `claude` on the PATH.
 **Links:**
 
 - [devpit on GitHub](https://github.com/jholhewres/devpit)
-- [Site and documentation](https://devpit.jhol.dev)
+- [Site and documentation](https://devpit.app)
 - [Post: My AI Coding Workflow](/blog/ai-coding-workflow-two-models-anchored)
 - [Post: Anchored — One Memory for All AI Tools](/blog/anchored-cross-tool-ai-memory-mcp)

@@ -118,6 +118,6 @@ curl -fsSL https://raw.githubusercontent.com/jholhewres/devpit/main/install.sh |
 **Links:**
 
 - [devpit on GitHub](https://github.com/jholhewres/devpit)
-- [Site and documentation](https://devpit.jhol.dev)
+- [Site and documentation](https://devpit.app)
 - [Post: devpit — One Workspace Per Project](/blog/devpit-agentic-development-environment)
 - [Post: My AI Coding Workflow](/blog/ai-coding-workflow-two-models-anchored)
