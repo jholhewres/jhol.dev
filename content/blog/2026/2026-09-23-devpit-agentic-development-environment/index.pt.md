@@ -133,7 +133,7 @@ O projeto é open source (Apache 2.0). Se o objetivo fizer sentido pra você tam
 Pra instalar no Linux ou no macOS:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/jholhewres/devpit/main/install.sh | sh
+curl -fsSL https://devpit.app/install.sh | sh
 ```
 
 Precisa do `tmux` e do `claude` no PATH.

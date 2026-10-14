@@ -110,7 +110,7 @@ I'm preparing the next update, with a lot of cool and useful things, always with
 If you want to try it:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/jholhewres/devpit/main/install.sh | sh
+curl -fsSL https://devpit.app/install.sh | sh
 ```
 
 ---

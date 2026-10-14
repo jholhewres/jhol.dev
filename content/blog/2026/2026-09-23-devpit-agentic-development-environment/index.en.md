@@ -133,7 +133,7 @@ The project is open source (Apache 2.0). If the goal makes sense to you too, try
 To install on Linux or macOS:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/jholhewres/devpit/main/install.sh | sh
+curl -fsSL https://devpit.app/install.sh | sh
 ```
 
 It needs `tmux` and `claude` on the PATH.

@@ -110,7 +110,7 @@ Estou preparando a próxima atualização, com muitas coisas legais e úteis, se
 Se você quiser testar:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/jholhewres/devpit/main/install.sh | sh
+curl -fsSL https://devpit.app/install.sh | sh
 ```
 
 ---
