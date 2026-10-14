@@ -1,3 +1,9 @@
+- name: "devpit"
+  description: "Open source agentic development environment. One workspace per project: a board where moving a card runs the work, agent sessions (Claude Code, Codex, Cursor CLI, Gemini) and an Orchestrator above every project. Its Devflow plugin takes a card from brief to done, with reviewers on different CLIs, evidence and gates."
+  tags: [rust, tauri, react, typescript, ai, mcp]
+  url: "https://github.com/jholhewres/devpit"
+  featured: true
+
 - name: "Anchored"
   description: "Persistent, cross-tool memory for AI agents. Local-first MCP server in Go: hybrid search (vector + BM25), local ONNX embeddings, bitemporal knowledge graph. One memory for Claude Code, Cursor, OpenCode, Gemini CLI, and more — 100% offline."
   tags: [go, ai, mcp, memory, sqlite]
