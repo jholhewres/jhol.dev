@@ -4,7 +4,7 @@ date: 2026-11-14
 tags: ["ai", "devpit", "orchestration", "claude-code", "agents", "workflow"]
 summary: "A v0.1.50 do devpit foi feita com várias sessões rodando ao mesmo tempo, cada uma num card. Neste post eu conto como planejo, ponho tudo pra rodar e acompanho cada etapa em detalhe sem me perder, e por que as entregas ficaram mais completas desde que juntei o Devflow à orquestração."
 image: orchestration.jpg
-reading_time: 7
+reading_time: 8
 ---
 
 No [post do Orquestrador](/blog/devpit-orchestrator-sessions-workflow) eu contei como abro sessões em vários projetos a partir de um chat só. No [do Devflow](/blog/devpit-devflow), como um card vai do briefing até o gate. A v0.1.50 do devpit foi onde eu juntei as duas coisas de verdade: foram 37 PRs, quase todos saídos de um card com a sua própria sessão, rodando em paralelo.
@@ -21,9 +21,15 @@ Então a minha pergunta mudou. Eu parei de pensar em como fazer mais rápido e p
 
 ## Primeiro Eu Planejo
 
-Tudo começa no chat do Orquestrador. Eu explico o que quero, do jeito que vem na cabeça, e o pedido vira cards no board do projeto. Cada card precisa de um brief dizendo o que fazer, onde mexer e quais regras seguir.
+Tudo começa no chat do Orquestrador. Eu explico o que quero, do jeito que vem na cabeça, e o pedido vira cards no board do projeto. Cada card precisa de um brief dizendo o que fazer, onde mexer e quais regras seguir. Quem escreve esse brief agora é o agente do projeto, que eu explico logo abaixo.
 
-Antes, o Orquestrador lia o projeto pra escrever cada um desses briefs. Agora cada projeto tem o seu próprio agente. Ele é uma sessão do Claude Code que só lê, sem poder editar, commitar ou dar push, e que guarda uma memória do projeto com data e fonte em cada entrada:
+## Um Agente Que Conhece o Projeto
+
+Existem várias ferramentas que criam vários agentes: um pra revisar código, outro pra planejar, outro pra executar. Eu usei várias delas. Mas depois de centralizar o meu trabalho no Orquestrador, percebi que o que mais fazia diferença era ter um agente que conhece o projeto, e que usa skills e ferramentas pra fazer cada uma dessas ações.
+
+Foi daí que saiu o protótipo do Agente do Projeto, que entrou nesta versão em Labs. E aqui vale uma distinção: não estou falando de uma sessão que carrega contexto e memória enquanto trabalha. É um agente de verdade, um por projeto, que incorpora as instruções do projeto do mesmo jeito que um `CLAUDE.md`: o que precisa seguir, como as coisas são feitas ali, o que já deu errado e o que foi decidido.
+
+E ele vai evoluindo. Cada vez que um card fecha, ele propõe as lições que tirou daquele trabalho. Quando um arquivo em que ele se apoiava muda, ele revisa o que sabia. Nada disso entra sozinho: eu aprovo, edito ou descarto cada proposta.
 
 ```
 .devpit/project-agent/
@@ -32,9 +38,11 @@ Antes, o Orquestrador lia o projeto pra escrever cada um desses briefs. Agora ca
 └── decisions.md   o que foi decidido e por quê
 ```
 
-O Orquestrador pergunta pra ele sobre o projeto e pede que ele escreva o brief de cada card. Ele acorda quando alguém chama, dorme depois de dez minutos parado e, quando volta, continua a mesma conversa.
+Combinado com o Orquestrador, isso deixa o time inteiro melhor. O Orquestrador pergunta pra ele em vez de ler o projeto do zero, e é ele quem escreve o brief de cada card. As sessões consultam o agente antes de sair explorando, e o que elas aprendem volta pra ele como proposta. Eu também converso com ele direto, pelo "Ask the project" na sidebar, e as respostas dizem em quais arquivos se apoiam.
 
-Eu também converso com ele direto, pelo "Ask the project" na sidebar. As respostas dizem em quais arquivos se apoiam, e nada vira fato na memória sem eu aprovar.
+Ele só lê: não edita, não commita, não dá push. Acorda quando alguém chama, dorme depois de dez minutos parado e, quando volta, continua a mesma conversa com a memória atualizada.
+
+Ainda é beta. Estou validando o conceito nesta versão, no meu dia a dia, e espero que ele se confirme. Se der certo, a ideia é que cada projeto tenha o seu agente crescendo junto com ele.
 
 ## Depois Eu Ponho Pra Rodar, Três de Cada Vez
 
@@ -42,9 +50,9 @@ Cada card ganha a sua sessão, numa worktree só dela. Nesta versão a branch ta
 
 Eu me dei uma regra: no máximo três sessões em andamento ao mesmo tempo, e uma nova só começa quando outra termina. Não é limite do devpit nem da máquina, é o quanto cabe na minha atenção. Com três, eu ainda sei de cabeça o que cada uma está fazendo.
 
-As sessões também não saem explorando o projeto às cegas. O brief pede que elas perguntem pro agente do projeto antes de sair lendo tudo ou de escolher um padrão que a memória já resolveu, e cada uma tem até dez perguntas. Quando uma sessão aprende alguma coisa, ela não grava sozinha. Ela propõe, e a proposta fica esperando eu aprovar, editar ou descartar.
+Cada sessão pode fazer até dez perguntas pro agente do projeto, e o brief pede que ela pergunte antes de escolher um padrão que a memória já resolveu.
 
-O que eu mais gosto é que isso fecha um ciclo. Quando um card termina, o agente lê os comentários e o que a revisão encontrou e me propõe algumas lições. As que eu aprovo entram nos próximos briefs e nas revisões do Devflow daquele projeto. E se os arquivos em que uma entrada se apoia mudam, ela é conferida de novo.
+O que eu mais gosto é que isso fecha um ciclo. As lições que o agente propõe no fim de cada card vêm dos comentários e do que a revisão encontrou, e as que eu aprovo entram nos próximos briefs e nas revisões do Devflow daquele projeto.
 
 Depois do merge, o devpit limpa sozinho a worktree, o cache de build e a branch local do card. Se tiver alguma coisa não commitada, ele deixa como está e me mostra. Com várias frentes passando por ali, isso evita muita sujeira acumulada.
 

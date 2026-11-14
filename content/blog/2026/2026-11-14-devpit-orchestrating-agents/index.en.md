@@ -4,7 +4,7 @@ date: 2026-11-14
 tags: ["ai", "devpit", "orchestration", "claude-code", "agents", "workflow"]
 summary: "devpit v0.1.50 was built with several sessions running at the same time, each on its own card. In this post I go through how I plan, set everything running and follow each step in detail without losing track, and why deliveries got more complete since I put Devflow together with orchestration."
 image: orchestration.jpg
-reading_time: 7
+reading_time: 8
 ---
 
 In the [Orchestrator post](/blog/devpit-orchestrator-sessions-workflow) I talked about how I start sessions across several projects from a single chat. In the [Devflow one](/blog/devpit-devflow), how a card goes from the brief to the gate. devpit v0.1.50 is where I really put the two together: 37 PRs, almost all of them coming out of a card with its own session, running in parallel.
@@ -21,9 +21,15 @@ So my question changed. I stopped thinking about how to go faster and started th
 
 ## First I Plan
 
-Everything starts in the Orchestrator chat. I explain what I want, the way it comes to mind, and the request becomes cards on the project's board. Each card needs a brief saying what to do, where to change things and which rules to follow.
+Everything starts in the Orchestrator chat. I explain what I want, the way it comes to mind, and the request becomes cards on the project's board. Each card needs a brief saying what to do, where to change things and which rules to follow. That brief is now written by the project agent, which I explain just below.
 
-Before, the Orchestrator read the project to write each of those briefs. Now each project has its own agent. It's a Claude Code session that only reads, with no way to edit, commit or push, and it keeps a memory of the project with a date and a source on every entry:
+## An Agent That Knows the Project
+
+There are plenty of tools that create several agents: one to review code, another to plan, another to execute. I've used a lot of them. But after centralizing my work in the Orchestrator, I realized that what made the most difference was having one agent that knows the project, and that uses skills and tools to do each of those things.
+
+That's where the prototype of the Project Agent came from, and it went into Labs in this version. And there's a distinction worth making here: I'm not talking about a session that carries context and memory while it works. It's an actual agent, one per project, that embodies the project's instructions the same way a `CLAUDE.md` does: what it has to follow, how things are done there, what went wrong before and what was decided.
+
+And it keeps evolving. Every time a card closes, it proposes the lessons it took from that work. When a file it relied on changes, it reviews what it knew. None of it goes in on its own: I approve, edit or discard each proposal.
 
 ```
 .devpit/project-agent/
@@ -32,9 +38,11 @@ Before, the Orchestrator read the project to write each of those briefs. Now eac
 └── decisions.md   what was decided and why
 ```
 
-The Orchestrator asks it about the project and has it write each card's brief. It wakes up when someone calls it, goes to sleep after ten idle minutes and, when it comes back, picks up the same conversation.
+Combined with the Orchestrator, this makes the whole team better. The Orchestrator asks it instead of reading the project from scratch, and it's the one that writes each card's brief. The sessions check with the agent before going off exploring, and what they learn goes back to it as a proposal. I also talk to it directly, through "Ask the project" in the sidebar, and the answers say which files they rest on.
 
-I also talk to it directly, through "Ask the project" in the sidebar. The answers say which files they rest on, and nothing becomes a fact in the memory without my approval.
+It only reads: it doesn't edit, commit or push. It wakes up when someone calls it, goes to sleep after ten idle minutes and, when it comes back, picks up the same conversation with its memory up to date.
+
+It's still beta. I'm validating the concept in this version, in my day-to-day work, and I hope it holds up. If it works out, the idea is for each project to have its own agent growing along with it.
 
 ## Then I Set It Running, Three at a Time
 
@@ -42,9 +50,9 @@ Each card gets its own session, in a worktree of its own. In this version the br
 
 I gave myself a rule: at most three sessions in progress at the same time, and a new one only starts when another finishes. It isn't a devpit limit or a machine limit, it's how much fits in my attention. With three, I still know off the top of my head what each one is doing.
 
-The sessions don't go exploring the project blindly either. The brief asks them to check with the project agent before reading everything or picking a pattern the memory already settled, and each one gets up to ten questions. When a session learns something, it doesn't write it down on its own. It proposes it, and the proposal waits for me to approve, edit or discard it.
+Each session can ask the project agent up to ten questions, and the brief asks it to check before picking a pattern the memory already settled.
 
-What I like most is that this closes a loop. When a card is done, the agent reads its comments and what the review found and proposes a few lessons to me. The ones I approve go into the next briefs and into that project's Devflow reviews. And if the files an entry rests on change, it gets checked again.
+What I like most is that this closes a loop. The lessons the agent proposes at the end of each card come from the card's comments and what the review found, and the ones I approve go into the next briefs and into that project's Devflow reviews.
 
 After the merge, devpit cleans up the card's worktree, build cache and local branch on its own. If there's anything uncommitted, it leaves it alone and shows it to me. With several fronts going through there, that saves a lot of leftover mess.
 
