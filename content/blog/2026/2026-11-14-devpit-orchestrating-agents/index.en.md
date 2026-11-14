@@ -42,7 +42,7 @@ Combined with the Orchestrator, this makes the whole team better. The Orchestrat
 
 It only reads: it doesn't edit, commit or push. It wakes up when someone calls it, goes to sleep after ten idle minutes and, when it comes back, picks up the same conversation with its memory up to date.
 
-It's still beta. I'm validating the concept in this version, in my day-to-day work, and I hope it holds up. If it works out, the idea is for each project to have its own agent growing along with it.
+It's still being tested. I'm validating the concept in this version, in my day-to-day work, and I hope it holds up. If it works out, the idea is for each project to have its own agent growing along with it.
 
 ## Then I Set It Running, Three at a Time
 

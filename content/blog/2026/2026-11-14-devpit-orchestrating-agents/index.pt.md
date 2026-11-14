@@ -42,7 +42,7 @@ Combinado com o Orquestrador, isso deixa o time inteiro melhor. O Orquestrador p
 
 Ele só lê: não edita, não commita, não dá push. Acorda quando alguém chama, dorme depois de dez minutos parado e, quando volta, continua a mesma conversa com a memória atualizada.
 
-Ainda é beta. Estou validando o conceito nesta versão, no meu dia a dia, e espero que ele se confirme. Se der certo, a ideia é que cada projeto tenha o seu agente crescendo junto com ele.
+Ainda está em testes. Estou validando o conceito nesta versão, no meu dia a dia, e espero que ele se confirme. Se der certo, a ideia é que cada projeto tenha o seu agente crescendo junto com ele.
 
 ## Depois Eu Ponho Pra Rodar, Três de Cada Vez
 
