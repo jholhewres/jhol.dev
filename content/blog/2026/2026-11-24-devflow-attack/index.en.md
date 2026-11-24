@@ -2,14 +2,14 @@
 title: "Reviewing Is Not Attacking: What I Learned Putting an Agent to Break My Code"
 date: 2026-11-24
 tags: ["ai", "devflow", "security", "code-review", "claude-code", "pentest"]
-summary: "I reviewed security with the best skills I found on GitHub and thought I was covered. When I put an agent to attack the code, with each suspicion turned into a test in a sandbox, it confirmed 12 flaws the reviews had missed."
+summary: "I reviewed security with the best skills I found on GitHub and thought I was covered. When I put an agent to attack the code, with each suspicion turned into an exploit in a sandbox, it confirmed 12 flaws the reviews had missed."
 image: devflow-attack.jpg
 reading_time: 5
 ---
 
 In the [Devflow post](/blog/devpit-devflow) I said I built the review by putting together the best skills I found, including the security ones. Every change went through a security reviewer, it listed the risks and I fixed what made sense. I thought I was covered.
 
-Then I decided to try something else: instead of asking an agent to review, I asked it to attack. Each suspicion had to become a test running in a sandbox with no network. If the test broke, the flaw was real.
+That lasted until a pentest task, where I found a silly flaw that had made it through several reviews. So I decided to try something else: instead of asking an agent to review, I asked it to attack. Each suspicion had to become an exploit, written as a test and running in a sandbox with no network. If the exploit worked, the flaw was real.
 
 I ran this on a real piece of an AI service that was already in production. It confirmed 12 flaws, each with a test as proof. None of them had shown up in the reviews.
 
@@ -19,11 +19,15 @@ I ran this on a real piece of an AI service that was already in production. It c
 
 The security skills are good, and I still use them. But they do one thing: the model reads the change with a checklist in mind and points out what looks wrong. That has three limits I only saw later.
 
-The first is that reading is not running. Almost every flaw depended on how a library actually behaves: a URL with a user embedded in it (`http://someone@host`) that the validation read one way and the parser another, a database connection that accepted any TLS certificate, a regex that hung on an unclosed `<script`. Reading, the model may even get suspicious, but the suspicion turns into one more "consider validating this input". Running, the test breaks or passes.
+The first is that reading is not running. Almost every flaw depended on how a library actually behaves: a URL with a user embedded in it (`http://someone@host`) that the validation read one way and the parser another, a database connection that accepted any TLS certificate, a regex that hung on an unclosed `<script`. Reading, the model may even get suspicious, but the suspicion turns into one more "consider validating this input". Running, the exploit works or it doesn't.
 
 The second is that the review looks at the diff. The attack starts from a goal, like "make the server fetch a URL I chose", and follows the data through the code. That regex was outside the changed lines: the change only started sending user text to a function that already existed. No review of the diff would get to it.
 
-The third is that a review finding is just text. Writing "possible SSRF" costs the same as writing "nothing found", so the report either comes full of alerts or comes too cautious. In the attack, each suspicion becomes a regular test in the project, and the result is confirmed, refuted or not run, with the reason. On that piece there were 12 confirmed and 8 refuted, and the refuted ones would have been eight alerts for me to investigate by hand.
+The third is that a review finding is just text. Writing "possible SSRF" costs the same as writing "nothing found", so the report either comes full of alerts or comes too cautious. In the attack, each suspicion becomes an exploit written as a regular test in the project, and the result is confirmed, refuted or not run, with the reason. On that piece there were 12 confirmed and 8 refuted, and the refuted ones would have been eight alerts for me to investigate by hand.
+
+## Why the Model Doesn't Refuse
+
+Asking a model to attack your code usually gets a refusal. What changes is the format: the exploit is a regular test in the project, runs in a Docker container with no internet, on a disposable copy of the code, and the stage only runs with your authorization. It becomes verification, not an attack.
 
 ## Memory Made More Difference Than the Model
 
@@ -33,7 +37,7 @@ What fixed it was keeping what each run tried. A refuted suspicion doesn't come 
 
 ## How It Ended Up in devflow
 
-The attack became its own stage, after the review:
+The attack became its own optional stage, after the review, that only runs with your authorization:
 
 ```yaml
 stages:
@@ -41,7 +45,7 @@ stages:
     run: sensitive   # off | sensitive | per-item | release
 ```
 
-It takes the review's suspicions, adds its own and runs each test in a container with no network, on a disposable copy of the code. When a flaw is confirmed, the same test runs on the code from before the change and after the fix, to know whether it was this change that opened the problem. Only what was proven holds the work. And in CI, `devflow attack --range` generates SARIF and fails the pipeline when it confirms an attack.
+It takes the review's suspicions, adds its own, writes an exploit for each one as a project test and runs it in a container with no network, on a disposable copy of the code. When a flaw is confirmed, the same exploit runs on the code from before the change and after the fix, to know whether it was this change that opened the problem. Only what was proven holds the work. And in CI, `devflow attack --range` generates SARIF and fails the pipeline when it confirms an attack.
 
 ## What Went Wrong Along the Way
 

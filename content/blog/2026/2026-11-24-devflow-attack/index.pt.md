@@ -2,14 +2,14 @@
 title: "Revisar Não É Atacar: O Que Eu Aprendi Colocando um Agente Pra Quebrar o Meu Código"
 date: 2026-11-24
 tags: ["ai", "devflow", "security", "code-review", "claude-code", "pentest"]
-summary: "Eu revisava segurança com as melhores skills que encontrei no GitHub e achava que estava coberto. Quando coloquei um agente pra atacar o código, com cada suspeita virando um teste num sandbox, ele confirmou 12 falhas que as revisões não tinham pegado."
+summary: "Eu revisava segurança com as melhores skills que encontrei no GitHub e achava que estava coberto. Quando coloquei um agente pra atacar o código, com cada suspeita virando um exploit num sandbox, ele confirmou 12 falhas que as revisões não tinham pegado."
 image: devflow-attack.jpg
 reading_time: 5
 ---
 
 No [post do Devflow](/blog/devpit-devflow) eu contei que montei a revisão juntando as melhores skills que encontrei, inclusive as de segurança. Toda mudança passava por um revisor de segurança, ele listava os riscos e eu corrigia o que fazia sentido. Eu achava que estava coberto.
 
-Aí resolvi testar outra coisa: em vez de pedir pra um agente revisar, pedi pra ele atacar. Cada suspeita precisava virar um teste rodando num sandbox sem rede. Se o teste quebrasse, a falha existia.
+Até que, numa task de pentest, achei uma falha besta que tinha passado por várias revisões. Aí resolvi testar outra coisa: em vez de pedir pra um agente revisar, pedi pra ele atacar. Cada suspeita precisava virar um exploit, escrito como teste e rodando num sandbox sem rede. Se o exploit funcionasse, a falha existia.
 
 Rodei isso num trecho real de um serviço de IA que já estava em produção. Ele confirmou 12 falhas, todas com um teste como prova. Nenhuma tinha aparecido nas revisões.
 
@@ -19,11 +19,15 @@ Rodei isso num trecho real de um serviço de IA que já estava em produção. El
 
 As skills de segurança são boas, e eu continuo usando. Mas elas fazem uma coisa: o modelo lê a mudança com um checklist na cabeça e aponta o que parece errado. Isso tem três limites que eu só vi depois.
 
-O primeiro é que ler não é executar. Quase todas as falhas dependiam de como uma biblioteca se comporta de verdade: uma URL com usuário embutido (`http://alguem@host`) que a validação lia de um jeito e o parser de outro, uma conexão com o banco que aceitava qualquer certificado TLS, uma regex que travava com um `<script` sem fechar. Lendo, o modelo até desconfia, mas a desconfiança vira mais um "considere validar essa entrada". Rodando, o teste quebra ou passa.
+O primeiro é que ler não é executar. Quase todas as falhas dependiam de como uma biblioteca se comporta de verdade: uma URL com usuário embutido (`http://alguem@host`) que a validação lia de um jeito e o parser de outro, uma conexão com o banco que aceitava qualquer certificado TLS, uma regex que travava com um `<script` sem fechar. Lendo, o modelo até desconfia, mas a desconfiança vira mais um "considere validar essa entrada". Rodando, o exploit funciona ou não.
 
 O segundo é que a revisão olha o diff. O ataque parte de um objetivo, tipo "fazer o servidor buscar uma URL que eu escolhi", e segue o dado pelo código. Aquela regex estava fora das linhas alteradas: a mudança só passou a mandar texto do usuário pra uma função que já existia. Nenhuma revisão do diff chegaria nela.
 
-O terceiro é que um achado de revisão é só texto. Escrever "possível SSRF" custa o mesmo que escrever "nada encontrado", então o relatório ou vem cheio de alertas ou vem cauteloso demais. No ataque, cada suspeita vira um teste comum do projeto, e o resultado é confirmada, refutada ou não executada, com o motivo. Naquele trecho foram 12 confirmadas e 8 refutadas, e as refutadas seriam oito alertas pra eu investigar na mão.
+O terceiro é que um achado de revisão é só texto. Escrever "possível SSRF" custa o mesmo que escrever "nada encontrado", então o relatório ou vem cheio de alertas ou vem cauteloso demais. No ataque, cada suspeita vira um exploit escrito como teste comum do projeto, e o resultado é confirmada, refutada ou não executada, com o motivo. Naquele trecho foram 12 confirmadas e 8 refutadas, e as refutadas seriam oito alertas pra eu investigar na mão.
+
+## Por Que o Modelo Não Recusa
+
+Pedir pra um modelo atacar o seu código costuma dar recusa. O que muda é o formato: o exploit é um teste comum do projeto, roda num container Docker sem internet, numa cópia descartável do código, e a etapa só roda com a sua autorização. Vira verificação, não ataque.
 
 ## A Memória Fez Mais Diferença Que o Modelo
 
@@ -33,7 +37,7 @@ O que resolveu foi guardar o que cada rodada tentou. Uma suspeita refutada não 
 
 ## Como Ficou no devflow
 
-O ataque virou uma etapa própria, depois da revisão:
+O ataque virou uma etapa própria e opcional, depois da revisão, que só roda com a sua autorização:
 
 ```yaml
 stages:
@@ -41,7 +45,7 @@ stages:
     run: sensitive   # off | sensitive | per-item | release
 ```
 
-Ele recebe as suspeitas da revisão, soma as dele e roda cada teste num container sem rede, numa cópia descartável do código. Quando uma falha é confirmada, o mesmo teste roda no código de antes da mudança e depois da correção, pra saber se foi essa mudança que abriu o problema. Só o que foi provado segura o trabalho. E no CI, `devflow attack --range` gera SARIF e falha o pipeline quando confirma um ataque.
+Ele recebe as suspeitas da revisão, soma as dele, escreve um exploit para cada uma como teste do projeto e roda num container sem rede, numa cópia descartável do código. Quando uma falha é confirmada, o mesmo exploit roda no código de antes da mudança e depois da correção, pra saber se foi essa mudança que abriu o problema. Só o que foi provado segura o trabalho. E no CI, `devflow attack --range` gera SARIF e falha o pipeline quando confirma um ataque.
 
 ## O Que Deu Errado no Caminho
 
